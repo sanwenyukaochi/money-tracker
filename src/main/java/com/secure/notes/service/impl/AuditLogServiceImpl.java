@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -48,4 +49,15 @@ public class AuditLogServiceImpl implements AuditLogService {
         log.setTimestamp(LocalDateTime.now());
         auditLogRepository.save(log);
     }
+
+    @Override
+    public List<AuditLog> getAllAuditLogs() {
+        return auditLogRepository.findAll();
+    }
+
+    @Override
+    public List<AuditLog> getAuditLogsForNoteId(Long id) {
+        return auditLogRepository.findByNoteId(id);
+    }
+
 }
