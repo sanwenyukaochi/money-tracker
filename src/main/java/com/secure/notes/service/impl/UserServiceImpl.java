@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByUserName(username);
         return user.orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
-
 
 
 }
