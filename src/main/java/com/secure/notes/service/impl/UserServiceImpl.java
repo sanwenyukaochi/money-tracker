@@ -9,6 +9,7 @@ import com.secure.notes.repository.PasswordResetTokenRepository;
 import com.secure.notes.repository.RoleRepository;
 import com.secure.notes.repository.UserRepository;
 import com.secure.notes.service.UserService;
+import com.secure.notes.util.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+
+    private final EmailService emailService;
 
     @Override
     public void updateUserRole(Long userId, String roleName) {
@@ -148,5 +151,6 @@ public class UserServiceImpl implements UserService {
 
         String resetUrl = frontendUrl + "/reset-password?token=" + token;
         // Send email to user
+        emailService.sendPasswordResetEmail(user.getEmail(), resetUrl);
     }
 }
