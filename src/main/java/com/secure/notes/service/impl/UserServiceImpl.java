@@ -2,29 +2,40 @@ package com.secure.notes.service.impl;
 
 import com.secure.notes.dto.UserDTO;
 import com.secure.notes.model.AppRole;
+import com.secure.notes.model.PasswordResetToken;
 import com.secure.notes.model.Role;
 import com.secure.notes.model.User;
+import com.secure.notes.repository.PasswordResetTokenRepository;
 import com.secure.notes.repository.RoleRepository;
 import com.secure.notes.repository.UserRepository;
 import com.secure.notes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Value("${frontend.url}")
+    String frontendUrl;
+
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
+
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public void updateUserRole(Long userId, String roleName) {
@@ -125,4 +136,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void generatePasswordResetToken(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+        Instant expiryDate = Instant.now().plus(24, ChronoUnit.HOURS);
+        PasswordResetToken resetToken = new PasswordResetToken(token, expiryDate, user);
+        passwordResetTokenRepository.save(resetToken);
+
+        String resetUrl = frontendUrl + "/reset-password?token=" + token;
+        // Send email to user
+    }
 }
