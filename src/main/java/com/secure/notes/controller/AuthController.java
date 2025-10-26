@@ -11,6 +11,7 @@ import com.secure.notes.security.request.SignupRequest;
 import com.secure.notes.security.response.LoginResponse;
 import com.secure.notes.security.response.MessageResponse;
 import com.secure.notes.security.response.UserInfoResponse;
+import com.secure.notes.security.service.UserDetailsImpl;
 import com.secure.notes.service.TotpService;
 import com.secure.notes.service.UserService;
 import com.secure.notes.util.AuthUtil;
@@ -75,7 +76,7 @@ public class AuthController {
 //      Set the authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
@@ -171,11 +172,12 @@ public class AuthController {
     }
 
     @PostMapping("/public/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email){
-        try{
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        try {
             userService.generatePasswordResetToken(email);
             return ResponseEntity.ok(new MessageResponse("Password reset email sent!"));
-        } catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("Error sending password reset email"));
         }
@@ -225,7 +227,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/user/2fa-status")
+    @GetMapping("/user/2fa-status")
     public ResponseEntity<?> get2FAStatus() {
         User user = authUtil.loggedInUser();
         if (user != null){
