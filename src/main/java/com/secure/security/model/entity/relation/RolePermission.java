@@ -14,7 +14,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Table(name = "sys_role_permission_rel",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_role_permission", columnNames = "role_id, permission_id")
+                @UniqueConstraint(name = "uk_role_permission", columnNames = {"role_id", "permission_id"})
         })
 @Comment("角色权限关联表")
 public class RolePermission extends BaseEntity {

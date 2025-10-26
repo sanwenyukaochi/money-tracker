@@ -14,7 +14,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Table(name = "sys_user_role_rel",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_user_role", columnNames = "user_id, role_id")
+                @UniqueConstraint(name = "uk_user_role", columnNames = {"user_id", "role_id"})
         })
 @Comment("用户角色关联表")
 public class UserRole extends BaseEntity {
