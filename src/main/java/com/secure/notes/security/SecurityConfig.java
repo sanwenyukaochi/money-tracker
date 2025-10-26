@@ -1,5 +1,6 @@
 package com.secure.notes.security;
 
+import com.secure.notes.config.OAuth2LoginSuccessHandler;
 import com.secure.notes.model.AppRole;
 import com.secure.notes.model.Role;
 import com.secure.notes.model.User;
@@ -7,11 +8,11 @@ import com.secure.notes.repository.RoleRepository;
 import com.secure.notes.repository.UserRepository;
 import com.secure.notes.security.jwt.AuthEntryPointJwt;
 import com.secure.notes.security.jwt.AuthTokenFilter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,12 +34,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity(prePostEnabled = true,
         securedEnabled = true,
         jsr250Enabled = true)
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthEntryPointJwt unauthorizedHandler;
 
     private final AuthTokenFilter authTokenFilter;
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    public SecurityConfig(AuthEntryPointJwt unauthorizedHandler, AuthTokenFilter authTokenFilter, @Lazy OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.authTokenFilter = authTokenFilter;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+    }
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -48,16 +56,15 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
         );
         //http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((requests)
-                -> requests
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/csrf-token").permitAll()
-                .requestMatchers("/api/auth/public/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                .anyRequest().authenticated())
-                .oauth2Login(oauth -> {
-
+        http.authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/csrf-token").permitAll()
+                        .requestMatchers("/api/auth/public/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(oAuth2LoginSuccessHandler);
                 });
         http.exceptionHandling(exception
                 -> exception.authenticationEntryPoint(unauthorizedHandler));
