@@ -35,6 +35,7 @@ public class Initializer {
                 user.setEmail("user@example.com");
                 user.setPassword(passwordEncoder.encode("user"));
                 user.setSignUpMethod("email");
+                user.setTwoFactorEnabled(false);
                 UserRole role = new UserRole();
                 role.setId(snowflake.nextId());
                 role.setUser(user);
@@ -50,6 +51,7 @@ public class Initializer {
                 admin.setEmail("admin@example.com");
                 admin.setPassword(passwordEncoder.encode("admin"));
                 admin.setSignUpMethod("email");
+                admin.setTwoFactorEnabled(false);
                 UserRole role = new UserRole();
                 role.setId(snowflake.nextId());
                 role.setUser(admin);

@@ -1,5 +1,6 @@
 package com.secure.security.security.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.secure.security.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String username;
     private String email;
+    @JsonIgnore
     private String password;
     private Boolean accountNonLocked;
     private Boolean accountNonExpired;
@@ -68,4 +70,26 @@ public class UserDetailsImpl implements UserDetails {
         }
         return authorities;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+
 }
