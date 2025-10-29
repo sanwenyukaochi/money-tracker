@@ -36,7 +36,7 @@ public class Permission extends BaseEntity {
     private String name;
 
     @Schema(title = "权限编码", description = "权限唯一标识（如 USER_CREATE、ROLE_DELETE 等）", example = "USER_CREATE")
-    @Column(name = "code", length = 10, nullable = false)
+    @Column(name = "code", length = 30, nullable = false)
     @Comment("权限编码")
     private String code;
 
