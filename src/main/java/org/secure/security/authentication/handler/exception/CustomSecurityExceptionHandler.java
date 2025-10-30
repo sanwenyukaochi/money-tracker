@@ -6,11 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import lombok.extern.slf4j.Slf4j;
 import org.secure.security.common.web.exception.BaseException;
 import org.secure.security.common.web.util.JSON;
 import org.secure.security.common.web.model.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,10 +21,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * 捕捉Spring security filter chain 中抛出的未知异常
  */
+@Slf4j
 public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
-
-  public static final Logger logger = LoggerFactory.getLogger(
-      CustomSecurityExceptionHandler.class);
 
   @Override
   public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -50,7 +49,7 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
       writer.flush();
       writer.close();
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       // 未知异常
       Result result = Result.builder()
           .message("System Error")

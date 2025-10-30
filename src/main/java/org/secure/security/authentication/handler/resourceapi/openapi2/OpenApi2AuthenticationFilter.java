@@ -6,17 +6,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.secure.security.common.web.exception.BaseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 public class OpenApi2AuthenticationFilter extends OncePerRequestFilter {
-
-  private static final Logger logger = LoggerFactory.getLogger(OpenApi2AuthenticationFilter.class);
 
   public OpenApi2AuthenticationFilter() {
   }
@@ -24,7 +22,7 @@ public class OpenApi2AuthenticationFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    logger.debug("Use OpenApi2AuthenticationFilter...");
+      log.debug("Use OpenApi2AuthenticationFilter...");
 
     String appId = request.getHeader("x-app-id");
     if (StringUtils.isEmpty(appId)) {

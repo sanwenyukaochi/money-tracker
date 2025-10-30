@@ -3,10 +3,10 @@ package org.secure.security.common.web.exception;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.secure.security.common.web.model.Result;
 import org.secure.security.common.web.util.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+@Slf4j
 @RestControllerAdvice
 public class WebGlobalExceptionHandler {
-
-  private Logger logger = LoggerFactory.getLogger(getClass());
 
   @ExceptionHandler(value = Exception.class)
   public Result exceptionHandler(HttpServletResponse response, Exception e) {
     response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-    logger.info("服务器异常", e);
+    log.info("服务器异常", e);
     return Result.fail("服务器异常");
   }
 

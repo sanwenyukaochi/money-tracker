@@ -6,9 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.secure.security.common.web.util.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,9 +18,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
+@Slf4j
 public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-  private static final Logger logger = LoggerFactory.getLogger(SmsAuthenticationFilter.class);
 
   public SmsAuthenticationFilter(PathPatternRequestMatcher pathRequestMatcher,
                                  AuthenticationManager authenticationManager,
@@ -34,7 +34,7 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-    logger.debug("user SmsCodeAuthenticationFilter");
+    log.debug("user SmsCodeAuthenticationFilter");
 
     // 提取请求数据
     String requestJsonData = request.getReader().lines()

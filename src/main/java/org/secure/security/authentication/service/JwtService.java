@@ -16,19 +16,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.secure.security.common.web.exception.BaseException;
 import org.secure.security.common.web.util.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class JwtService implements InitializingBean {
-
-  private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
   private PrivateKey privateKey;
 
@@ -59,7 +58,7 @@ public class JwtService implements InitializingBean {
       PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(Decoders.BASE64.decode(privateKeyBase64));
       return kf.generatePrivate(ks);
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new BaseException("获取Jwt私钥失败", HttpStatus.BAD_REQUEST);
     }
   }
