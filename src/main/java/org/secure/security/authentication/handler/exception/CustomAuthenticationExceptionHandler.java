@@ -23,6 +23,6 @@ public class CustomAuthenticationExceptionHandler implements
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.writeValue(response.getOutputStream(), Result.fail("${authentication.fail:认证失败}"));
+    objectMapper.writeValue(response.getOutputStream(), Result.error("${authentication.fail:认证失败}"));
   }
 }

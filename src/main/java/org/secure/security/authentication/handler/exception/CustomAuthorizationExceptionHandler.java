@@ -23,6 +23,6 @@ public class CustomAuthorizationExceptionHandler implements AccessDeniedHandler 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(HttpStatus.FORBIDDEN.value());
       ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.writeValue(response.getOutputStream(), Result.fail("${low.power:无权访问}"));
+      objectMapper.writeValue(response.getOutputStream(), Result.error("${low.power:无权访问}"));
   }
 }

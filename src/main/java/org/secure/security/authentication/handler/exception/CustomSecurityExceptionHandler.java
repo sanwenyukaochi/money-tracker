@@ -42,7 +42,7 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setStatus(HttpStatus.FORBIDDEN.value());
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), Result.fail(e.getMessage()));
+        objectMapper.writeValue(response.getOutputStream(), Result.error(e.getMessage()));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       // 未知异常

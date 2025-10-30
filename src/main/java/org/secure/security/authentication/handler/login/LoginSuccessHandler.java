@@ -71,7 +71,7 @@ public class LoginSuccessHandler extends
     // 虽然APPLICATION_JSON_UTF8_VALUE过时了，但也要用。因为Postman工具不声明utf-8编码就会出现乱码
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.writeValue(response.getOutputStream(), Result.data(responseData, "${login.success:登录成功！}"));
+      objectMapper.writeValue(response.getOutputStream(), Result.success("${login.success:登录成功！}", responseData));
   }
 
   public String generateToken(UserLoginInfo currentUser) throws JsonProcessingException {

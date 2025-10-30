@@ -24,7 +24,7 @@ public class WebGlobalExceptionHandler {
   public Result exceptionHandler(HttpServletResponse response, Exception e) {
     response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
     log.info("服务器异常", e);
-    return Result.fail("服务器异常");
+    return Result.error("服务器异常");
   }
 
   @ExceptionHandler(value = NoResourceFoundException.class)
@@ -49,7 +49,7 @@ public class WebGlobalExceptionHandler {
       errorFields.put(fieldName, error.getDefaultMessage());
     }
     ObjectMapper objectMapper = new ObjectMapper();
-    return Result.fail(objectMapper.writeValueAsString(errorFields));
+    return Result.error(objectMapper.writeValueAsString(errorFields));
   }
 
   @ExceptionHandler(value = BaseException.class)
@@ -61,7 +61,7 @@ public class WebGlobalExceptionHandler {
   private Result createResult(BaseException e) {
     return Result.builder()
         .message(e.getMessage())
-        .code(e.getCode() == null ? Result.FAIL_CODE : e.getCode())
+        .code(e.getCode() == null ? Result.ERROR_CODE : e.getCode())
         .build();
   }
 }

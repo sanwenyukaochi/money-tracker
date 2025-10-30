@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-
 /**
  * 响应信息主体
  *
@@ -18,7 +16,7 @@ import java.util.HashMap;
 public class Result {
 
     public static final String SUCCESS_CODE = "success";
-    public static final String FAIL_CODE = "fail";
+    public static final String ERROR_CODE = "error";
     private String code;
     private String message;
     private Object data;
@@ -39,52 +37,34 @@ public class Result {
                 .build();
     }
 
-    public static Result row(int row) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("row", row);
-        if (row > 0) {
-            return data(data);
-        } else {
-            return fail(data);
-        }
-    }
-
-    public static Result data(Object data) {
+    public static Result success(String message, Object data) {
         return Result.builder()
                 .code(SUCCESS_CODE)
-                .message(SUCCESS_CODE)
+                .message(message)
                 .data(data)
                 .build();
     }
 
-    public static Result data(Object data, String responseMessage) {
+    public static Result error(Object data, String msg) {
         return Result.builder()
-                .code(SUCCESS_CODE)
-                .message(responseMessage)
-                .data(data)
-                .build();
-    }
-
-    public static Result fail(Object data, String msg) {
-        return Result.builder()
-                .code(FAIL_CODE)
+                .code(ERROR_CODE)
                 .message(msg)
                 .data(data)
                 .build();
     }
 
-    public static Result fail(String msg) {
+    public static Result error(String msg) {
         return Result.builder()
-                .code(FAIL_CODE)
+                .code(ERROR_CODE)
                 .message(msg)
                 .data(null)
                 .build();
     }
 
-    public static Result fail(Object data) {
+    public static Result error(Object data) {
         return Result.builder()
-                .code(FAIL_CODE)
-                .message(FAIL_CODE)
+                .code(ERROR_CODE)
+                .message(ERROR_CODE)
                 .data(data)
                 .build();
     }
