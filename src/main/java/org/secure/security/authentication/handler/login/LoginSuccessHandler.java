@@ -12,7 +12,6 @@ import org.secure.security.authentication.service.JwtService;
 import org.secure.security.common.web.exception.BaseException;
 import org.secure.security.common.web.model.Result;
 import org.secure.security.common.web.util.JSON;
-import org.secure.security.common.web.util.TimeTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -78,13 +77,13 @@ public class LoginSuccessHandler extends
   }
 
   public String generateToken(UserLoginInfo currentUser) {
-    long expiredTime = TimeTool.nowMilli() + TimeUnit.MINUTES.toMillis(10); // 10分钟后过期
+    long expiredTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(10); // 10分钟后过期
     currentUser.setExpiredTime(expiredTime);
     return jwtService.createJwt(currentUser, expiredTime);
   }
 
   private String generateRefreshToken(UserLoginInfo loginInfo) {
-    return jwtService.createJwt(loginInfo, TimeTool.nowMilli() + TimeUnit.DAYS.toMillis(30));
+    return jwtService.createJwt(loginInfo, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(30));
   }
 
 }
