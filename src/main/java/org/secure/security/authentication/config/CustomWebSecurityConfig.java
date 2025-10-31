@@ -12,7 +12,7 @@ import org.secure.security.authentication.handler.login.sms.SmsAuthenticationFil
 import org.secure.security.authentication.handler.login.sms.SmsAuthenticationProvider;
 import org.secure.security.authentication.handler.login.username.UsernameAuthenticationFilter;
 import org.secure.security.authentication.handler.login.username.UsernameAuthenticationProvider;
-import org.secure.security.authentication.handler.resourceapi.openapi1.MyJwtAuthenticationFilter;
+import org.secure.security.authentication.filter.JwtTokenAuthenticationFilter;
 import org.secure.security.authentication.handler.resourceapi.openapi2.OpenApi2AuthenticationFilter;
 import org.secure.security.authentication.service.JwtService;
 import org.springframework.context.ApplicationContext;
@@ -129,7 +129,7 @@ public class CustomWebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
         commonHttpSetting(http);
 
-        MyJwtAuthenticationFilter openApi1Filter = new MyJwtAuthenticationFilter(
+        JwtTokenAuthenticationFilter openApi1Filter = new JwtTokenAuthenticationFilter(
                 applicationContext.getBean(JwtService.class));
         // 加一个登录方式。用户名、密码登录
         http.addFilterBefore(openApi1Filter, UsernamePasswordAuthenticationFilter.class);

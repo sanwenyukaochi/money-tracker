@@ -1,4 +1,4 @@
-package org.secure.security.authentication.handler.resourceapi.openapi1;
+package org.secure.security.authentication.filter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,15 +10,15 @@ import java.util.Collection;
 
 @Setter
 @Getter
-public class MyJwtAuthentication extends AbstractAuthenticationToken {
+public class JwtTokenAuthentication extends AbstractAuthenticationToken {
 
     private String jwtToken; // 前端传过来
     private UserLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
-    public MyJwtAuthentication(String jwtToken, UserLoginInfo currentUser, Boolean authenticated,
-                               Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
+    public JwtTokenAuthentication(String jwtToken, UserLoginInfo currentUser, Boolean authenticated,
+                                  Collection<? extends GrantedAuthority> authorities) {
         this.jwtToken = jwtToken;
         this.currentUser = currentUser;
+        super(authorities);
         super.setAuthenticated(authenticated);
     }
 

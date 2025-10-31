@@ -1,4 +1,4 @@
-package org.secure.security.authentication.handler.resourceapi.openapi1;
+package org.secure.security.authentication.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +15,13 @@ import org.secure.security.authentication.service.JwtService;
 import org.secure.security.authentication.handler.login.UserLoginInfo;
 import org.secure.security.common.web.exception.BaseException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MyJwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
@@ -40,8 +40,7 @@ public class MyJwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             UserLoginInfo userLoginInfo = jwtService.verifyJwt(jwtToken, UserLoginInfo.class);
-            MyJwtAuthentication authentication = new MyJwtAuthentication(jwtToken, userLoginInfo, true, AuthorityUtils.NO_AUTHORITIES);
-            authentication.setAuthenticated(true);
+            JwtTokenAuthentication authentication = new JwtTokenAuthentication(jwtToken, userLoginInfo, true, List.of());
             // 认证通过后，一定要设置到SecurityContextHolder里面去。
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
