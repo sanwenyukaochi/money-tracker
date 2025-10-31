@@ -2,14 +2,15 @@ package org.secure.security.authentication.service;
 
 import lombok.RequiredArgsConstructor;
 import org.secure.security.common.web.model.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.secure.security.common.web.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
 //    /**
 //     * 通过openId获取用户信息
@@ -32,27 +33,11 @@ public class UserService {
 //    }
 
     public User getUserByPhone(String phoneNumber) {
-        if (phoneNumber.equals("1234567890")) {
-            User testUser = new User();
-            testUser.setId(1002L);
-            testUser.setUsername("manager");
-            testUser.setPassword(passwordEncoder.encode("manager"));
-            testUser.setPhone("1234567890");
-            return testUser;
-        }
-        return null;
+        return userRepository.findByPhone(phoneNumber).orElseThrow(() -> new UsernameNotFoundException("手机号不存在"));
     }
 
     public User getUserFromDB(String username) {
-        if (username.equals("admin")) {
-            User testUser = new User();
-            testUser.setId(1001L);
-            testUser.setUsername("admin");
-            testUser.setPassword(passwordEncoder.encode("admin"));
-            testUser.setPhone("1234567890");
-            return testUser;
-        }
-        return null;
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
     }
 
 //    public void createUserWithOpenId(User user, String openId, String platform) {
