@@ -1,6 +1,5 @@
 package org.secure.security.common.web.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +27,6 @@ public class User extends BaseEntity {
 
     @Schema(title = "密码", description = "加密后的密码，不会在接口返回中显示", accessMode = Schema.AccessMode.WRITE_ONLY)
     @Column(name = "password", nullable = false, length = 120)
-    @JsonIgnore
     @Comment("用户密码")
     private String password;
 
