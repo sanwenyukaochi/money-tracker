@@ -70,9 +70,4 @@ public class User extends BaseEntity {
     @Comment("是否启用双因素认证（true=启用，false=未启用）")
     private Boolean twoFactorEnabled = false;
 
-    @Schema(title = "注册方式", description = "用户注册来源，如 EMAIL、GITHUB、GOOGLE、WECHAT、SYSTEM 等")
-    @Column(name = "sign_up_method", nullable = false, length = 10)
-    @Comment("注册方式（EMAIL/GITHUB/GOOGLE/WECHAT/SYSTEM等）")
-    private String signUpMethod;
-
 }

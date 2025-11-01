@@ -33,7 +33,6 @@ public class GithubAuthenticationProvider implements AuthenticationProvider {
                     .accountNonExpired(true)
                     .accountNonLocked(true)
                     .credentialsNonExpired(true)
-                    .signUpMethod("github")
                     .build();
             return new GithubAuthentication(currentUser, true, List.of());
         } catch (Exception e) {

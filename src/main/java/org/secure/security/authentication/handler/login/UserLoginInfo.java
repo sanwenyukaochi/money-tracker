@@ -29,7 +29,6 @@ public class UserLoginInfo implements UserDetails {
     private Boolean enabled;
     private String twoFactorSecret;
     private Boolean twoFactorEnabled;
-    private String signUpMethod;
     private Long expiredTime; // JWT过期时间
 
     @Override
