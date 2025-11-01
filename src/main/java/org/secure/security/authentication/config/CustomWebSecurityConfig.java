@@ -155,9 +155,8 @@ public class CustomWebSecurityConfig {
     @Bean
     public SecurityFilterChain publicApiFilterChain(HttpSecurity http) throws Exception {
         commonHttpSetting(http);
-        http
-                // 使用securityMatcher限定当前配置作用的路径
-                .securityMatcher("/open-api/business-3")
+        // 使用securityMatcher限定当前配置作用的路径
+        http.securityMatcher("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         return http.build();
     }
