@@ -1,9 +1,14 @@
 package org.secure.security.authentication.handler.login.github;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.secure.security.authentication.handler.login.UserLoginInfo;
 import org.secure.security.authentication.handler.login.github.dto.GitHubUserProfile;
 import org.secure.security.authentication.handler.login.github.service.GitHubOAuthService;
+import org.secure.security.authentication.service.UserIdentityService;
+import org.secure.security.authentication.service.UserService;
+import org.secure.security.common.web.model.User;
+import org.secure.security.common.web.model.UserIdentity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -18,6 +23,10 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
 
     private final GitHubOAuthService githubOAuthService;
 
+    private final UserService userService;
+
+    private final UserIdentityService userIdentityService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String code = (String) authentication.getPrincipal();
@@ -25,16 +34,14 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
             String accessToken = githubOAuthService.exchangeCodeForToken(code);
             GitHubUserProfile profile = githubOAuthService.fetchUserProfile(accessToken);
 
-            UserLoginInfo currentUser = UserLoginInfo.builder()
-                    .id(profile.getId())
-                    .username(profile.getLogin())
-                    .email(profile.getEmail())
-                    .enabled(true)
-                    .accountNonExpired(true)
-                    .accountNonLocked(true)
-                    .credentialsNonExpired(true)
-                    .build();
-            return new GitHubAuthentication(currentUser, true, List.of());
+            UserIdentity userIdentity = userIdentityService.getUserIdentityByProviderUserId(profile.getId(), UserIdentity.AuthProvider.GITHUB);
+            User user = userService.findById(userIdentity.getUserId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);
+            GitHubAuthentication token = new GitHubAuthentication(currentUser, true, List.of());
+            // 构造认证对象
+            return token;
         } catch (Exception e) {
             throw new BadCredentialsException("GitHub OAuth2 登录失败: " + e.getMessage());
         }

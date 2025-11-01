@@ -33,7 +33,7 @@ public class UserIdentity extends BaseEntity {
     @Schema(title = "第三方用户唯一ID", example = "123456", description = "第三方平台返回的用户唯一ID，用于绑定")
     @Column(name = "provider_user_id", nullable = false, length = 64)
     @Comment("第三方用户唯一ID")
-    private String providerUserId;
+    private Long providerUserId;
 
     @Schema(title = "第三方用户名", example = "octocat", description = "第三方平台用户名，可选")
     @Column(name = "provider_username", length = 100)
