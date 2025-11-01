@@ -1,59 +1,50 @@
 package org.secure.security.authentication.handler.login.github.dto;
 
-import lombok.Data;
-
-@Data
-public class GitHubUserProfile {
-    private Long id;
-    private String login;
-    private String nodeId;
-    private String avatarUrl;
-    private String gravatarId;
-    private String url;
-    private String htmlUrl;
-    private String followersUrl;
-    private String followingUrl;
-    private String gistsUrl;
-    private String starredUrl;
-    private String subscriptionsUrl;
-    private String organizationsUrl;
-    private String reposUrl;
-    private String eventsUrl;
-    private String receivedEventsUrl;
-    private String type;
-    private Boolean siteAdmin;
-
-    private String name;
-    private String company;
-    private String blog;
-    private String location;
-    private String email;
-    private Boolean hireable;
-    private String bio;
-    private String twitterUsername;
-
-    private Integer publicRepos;
-    private Integer publicGists;
-    private Integer followers;
-    private Integer following;
-
-    private String createdAt;
-    private String updatedAt;
-
-    private Integer privateGists;
-    private Integer totalPrivateRepos;
-    private Integer ownedPrivateRepos;
-    private Integer diskUsage;
-    private Integer collaborators;
-    private Boolean twoFactorAuthentication;
-
-    private Plan plan;
-
-    @Data
-    public static class Plan {
-        private String name;
-        private Integer space;
-        private Integer privateRepos;
-        private Integer collaborators;
-    }
+public record GitHubUserProfile(
+        Long id,
+        String login,
+        String nodeId,
+        String avatarUrl,
+        String gravatarId,
+        String url,
+        String htmlUrl,
+        String followersUrl,
+        String followingUrl,
+        String gistsUrl,
+        String starredUrl,
+        String subscriptionsUrl,
+        String organizationsUrl,
+        String reposUrl,
+        String eventsUrl,
+        String receivedEventsUrl,
+        String type,
+        Boolean siteAdmin,
+        String name,
+        String company,
+        String blog,
+        String location,
+        String email,
+        Boolean hireable,
+        String bio,
+        String twitterUsername,
+        Integer publicRepos,
+        Integer publicGists,
+        Integer followers,
+        Integer following,
+        String createdAt,
+        String updatedAt,
+        Integer privateGists,
+        Integer totalPrivateRepos,
+        Integer ownedPrivateRepos,
+        Integer diskUsage,
+        Integer collaborators,
+        Boolean twoFactorAuthentication,
+        Plan plan
+) {
+    public record Plan(
+            String name,
+            Integer space,
+            Integer privateRepos,
+            Integer collaborators
+    ) {}
 }

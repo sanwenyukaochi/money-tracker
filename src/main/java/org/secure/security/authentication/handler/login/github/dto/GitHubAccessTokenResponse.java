@@ -1,13 +1,7 @@
 package org.secure.security.authentication.handler.login.github.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
-@Data
-public class GitHubAccessTokenResponse {
-    @JsonProperty("access_token")
-    private String accessToken;
-    @JsonProperty("token_type")
-    private String tokenType;
-    private String scope;
-}
+public record GitHubAccessTokenResponse(
+        String accessToken,
+        String tokenType,
+        String scope
+) {}

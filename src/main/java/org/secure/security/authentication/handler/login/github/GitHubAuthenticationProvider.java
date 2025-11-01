@@ -3,6 +3,7 @@ package org.secure.security.authentication.handler.login.github;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.secure.security.authentication.handler.login.UserLoginInfo;
+import org.secure.security.authentication.handler.login.github.dto.GitHubAccessTokenResponse;
 import org.secure.security.authentication.handler.login.github.dto.GitHubUserProfile;
 import org.secure.security.authentication.handler.login.github.service.GitHubOAuthService;
 import org.secure.security.authentication.service.UserIdentityService;
@@ -31,10 +32,10 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String code = (String) authentication.getPrincipal();
         try {
-            String accessToken = githubOAuthService.exchangeCodeForToken(code);
-            GitHubUserProfile profile = githubOAuthService.fetchUserProfile(accessToken);
+            GitHubAccessTokenResponse response = githubOAuthService.exchangeCodeForToken(code);
+            GitHubUserProfile profile = githubOAuthService.fetchUserProfile(response.accessToken());
 
-            UserIdentity userIdentity = userIdentityService.getUserIdentityByProviderUserId(profile.getId(), UserIdentity.AuthProvider.GITHUB);
+            UserIdentity userIdentity = userIdentityService.getUserIdentityByProviderUserId(profile.id(), UserIdentity.AuthProvider.GITHUB);
             User user = userService.findById(userIdentity.getUserId());
 
             ObjectMapper objectMapper = new ObjectMapper();
