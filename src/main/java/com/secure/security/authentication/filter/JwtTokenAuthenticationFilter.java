@@ -1,6 +1,7 @@
 package com.secure.security.authentication.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -40,15 +41,15 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             // 认证通过后，一定要设置到SecurityContextHolder里面去。
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (MalformedJwtException e) {
-            throw new BaseException("token.malformed", "JWT Token 无效", HttpStatus.UNAUTHORIZED);
+            throw new BaseException(ResponseCodeConstants.TOKEN_MALFORMED, "JWT Token 无效", HttpStatus.UNAUTHORIZED);
         } catch (ExpiredJwtException e) {
-            throw new BaseException("token.expired", "JWT 已过期", HttpStatus.UNAUTHORIZED);
+            throw new BaseException(ResponseCodeConstants.TOKEN_EXPIRED, "JWT 已过期", HttpStatus.UNAUTHORIZED);
         } catch (UnsupportedJwtException e) {
-            throw new BaseException("token.unsupported", "JWT 不受支持", HttpStatus.UNAUTHORIZED);
+            throw new BaseException(ResponseCodeConstants.TOKEN_UNSUPPORTED, "JWT 不受支持", HttpStatus.UNAUTHORIZED);
         } catch (IllegalArgumentException e) {
-            throw new BaseException("token.empty", "JWT 内容为空", HttpStatus.UNAUTHORIZED);
+            throw new BaseException(ResponseCodeConstants.TOKEN_EMPTY, "JWT 内容为空", HttpStatus.UNAUTHORIZED);
         } catch (JsonProcessingException e) {
-            throw new BaseException("token.parse_error", "JWT 用户信息解析失败", HttpStatus.UNAUTHORIZED);
+            throw new BaseException(ResponseCodeConstants.TOKEN_PARSE_ERROR, "JWT 用户信息解析失败", HttpStatus.UNAUTHORIZED);
         }
         // 放行
         filterChain.doFilter(request, response);
