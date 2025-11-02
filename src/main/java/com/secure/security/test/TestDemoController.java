@@ -2,6 +2,7 @@ package com.secure.security.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
 import lombok.RequiredArgsConstructor;
 import com.secure.security.authentication.handler.resourceapi.openapi2.OpenApi2LoginInfo;
 import com.secure.security.domain.model.dto.Result;
@@ -25,7 +26,7 @@ public class TestDemoController {
                 .getPrincipal();
         System.out.println("自家用户登录信息：" + objectMapper.writeValueAsString(userLoginInfo));
         return Result.builder()
-                .code(Result.SUCCESS_CODE)
+                .code(ResponseCodeConstants.ERROR)
                 .data(userLoginInfo)
                 .message("测试国际化消息 A")
                 .build();
@@ -39,7 +40,7 @@ public class TestDemoController {
                 .getPrincipal();
         System.out.println("三方API登录信息：" + objectMapper.writeValueAsString(userLoginInfo));
         return Result.builder()
-                .code(Result.SUCCESS_CODE)
+                .code(ResponseCodeConstants.ERROR)
                 .data(userLoginInfo)
                 .message("SUCCESS B")
                 .build();
@@ -52,7 +53,7 @@ public class TestDemoController {
                 .getAuthentication();
         System.out.println("登录信息：" + objectMapper.writeValueAsString(authentication));
         return Result.builder()
-                .code(Result.SUCCESS_CODE)
+                .code(ResponseCodeConstants.ERROR)
                 .data("模拟访问成功的响应数据")
                 .message("匿名接口，所有人可公开访问")
                 .build();
@@ -61,7 +62,7 @@ public class TestDemoController {
     @GetMapping("/business-4")
     public Result<?> getD() {
         return Result.builder()
-                .code(Result.SUCCESS_CODE)
+                .code(ResponseCodeConstants.ERROR)
                 .data("模拟 未知 api")
                 .message("default api ...")
                 .build();

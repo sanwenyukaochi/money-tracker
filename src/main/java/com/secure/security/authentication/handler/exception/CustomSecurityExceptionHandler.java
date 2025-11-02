@@ -1,6 +1,7 @@
 package com.secure.security.authentication.handler.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
             // 未知异常
             Result<?> result = Result.builder()
                     .message("System Error")
-                    .code("system.error")
+                    .code(ResponseCodeConstants.SYSTEM_ERROR)
                     .build();
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

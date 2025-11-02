@@ -2,6 +2,7 @@ package com.secure.security.common.web.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class WebGlobalExceptionHandler {
         response.setStatus(HttpStatus.NOT_FOUND.value());
         return Result.builder()
                 .message("api not found")
-                .code("api.not.found")
+                .code(ResponseCodeConstants.API_NOT_FOUND)
                 .build();
     }
 
@@ -65,7 +66,7 @@ public class WebGlobalExceptionHandler {
     private Result<?> createResult(BaseException e) {
         return Result.builder()
                 .message(e.getMessage())
-                .code(e.getCode() == null ? Result.ERROR_CODE : e.getCode())
+                .code(e.getCode() == null ? ResponseCodeConstants.ERROR : e.getCode())
                 .build();
     }
 }

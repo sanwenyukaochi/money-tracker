@@ -1,6 +1,7 @@
 package com.secure.security.authentication.handler.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,7 +34,7 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
 
         Result responseData = Result.builder()
                 .data(null)
-                .code("login.fail")
+                .code(ResponseCodeConstants.LOGIN_FAIL)
                 .message(errorMessage)
                 .build();
         objectMapper.writeValue(response.getOutputStream(), responseData);
