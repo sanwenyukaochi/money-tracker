@@ -30,8 +30,9 @@ import com.secure.security.authentication.handler.exception.CustomAuthentication
 import com.secure.security.authentication.handler.exception.CustomAuthorizationExceptionHandler;
 import com.secure.security.authentication.handler.exception.CustomSecurityExceptionHandler;
 import com.secure.security.authentication.handler.resourceapi.openapi2.OpenApi2AuthenticationFilter;
-import com.secure.security.authentication.filter.JwtTokenAuthenticationFilter;
-import com.secure.security.authentication.service.JwtService;
+import com.secure.security.authentication.handler.auth.jwt.JwtTokenAuthenticationFilter;
+import com.secure.security.authentication.handler.auth.jwt.JwtTokenAuthenticationProvider;
+import com.secure.security.authentication.handler.auth.jwt.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -158,10 +159,13 @@ public class CustomWebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
         commonHttpSetting(http);
 
-        JwtTokenAuthenticationFilter openApi1Filter = new JwtTokenAuthenticationFilter(
-                applicationContext.getBean(JwtService.class));
-        // 加一个登录方式。用户名、密码登录
-        http.addFilterBefore(openApi1Filter, UsernamePasswordAuthenticationFilter.class);
+        LoginFailHandler loginFailHandler = applicationContext.getBean(LoginFailHandler.class);
+        
+        // 创建JWT认证过滤器，使用AuthenticationManager
+        JwtTokenAuthenticationFilter jwtFilter = new JwtTokenAuthenticationFilter(
+                applicationContext.getBean(JwtService.class),
+                new ProviderManager(List.of(applicationContext.getBean(JwtTokenAuthenticationProvider.class))));
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

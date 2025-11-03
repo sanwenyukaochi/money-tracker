@@ -1,7 +1,9 @@
-package com.secure.security.authentication.service;
+package com.secure.security.authentication.handler.auth.jwt.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secure.security.common.web.constant.ResponseCodeConstants;
+import com.secure.security.common.web.exception.BaseException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import com.secure.security.authentication.handler.auth.UserLoginInfo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -71,19 +74,19 @@ public class JwtService {
             return objectMapper.readValue(json, userLoginInfoClass);
         } catch (MalformedJwtException e) {
             log.error("JWT Token 无效: {}", e.getMessage());
-            throw e;
+            throw new BaseException(ResponseCodeConstants.TOKEN_MALFORMED, "JWT Token 无效", HttpStatus.UNAUTHORIZED);
         } catch (ExpiredJwtException e) {
             log.error("JWT 已过期: {}", e.getMessage());
-            throw e;
+            throw new BaseException(ResponseCodeConstants.TOKEN_EXPIRED, "JWT 已过期", HttpStatus.UNAUTHORIZED);
         } catch (UnsupportedJwtException e) {
             log.error("JWT 不受支持: {}", e.getMessage());
-            throw e;
+            throw new BaseException(ResponseCodeConstants.TOKEN_UNSUPPORTED, "JWT 不受支持", HttpStatus.UNAUTHORIZED);
         } catch (IllegalArgumentException e) {
             log.error("JWT 内容为空: {}", e.getMessage());
-            throw e;
+            throw new BaseException(ResponseCodeConstants.TOKEN_EMPTY, "JWT 内容为空", HttpStatus.UNAUTHORIZED);
         } catch (JsonProcessingException e) {
             log.error("JWT 用户信息解析失败: {}", e.getMessage());
-            throw e;
+            throw new BaseException(ResponseCodeConstants.TOKEN_PARSE_ERROR, "JWT 用户信息解析失败", HttpStatus.UNAUTHORIZED);
         }
     }
 }
