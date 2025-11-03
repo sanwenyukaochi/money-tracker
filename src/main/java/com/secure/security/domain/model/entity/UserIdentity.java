@@ -35,16 +35,6 @@ public class UserIdentity extends BaseEntity {
     @Comment("第三方用户唯一ID")
     private Long providerUserId;
 
-    @Schema(title = "第三方用户名", example = "octocat", description = "第三方平台用户名，可选")
-    @Column(name = "provider_username", length = 100)
-    @Comment("第三方用户名")
-    private String providerUsername;
-
-    @Schema(title = "第三方邮箱", example = "octocat@github.com", description = "第三方平台邮箱，可选")
-    @Column(name = "provider_email", length = 100)
-    @Comment("第三方邮箱")
-    private String providerEmail;
-
     public enum AuthProvider {
         EMAIL,
         GITHUB,
