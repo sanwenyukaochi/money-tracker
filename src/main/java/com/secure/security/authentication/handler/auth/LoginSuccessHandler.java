@@ -1,6 +1,5 @@
 package com.secure.security.authentication.handler.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secure.security.common.web.constant.ResponseCodeConstants;
 import jakarta.annotation.PostConstruct;
@@ -76,13 +75,13 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
         objectMapper.writeValue(response.getOutputStream(), Result.success("登录成功", loginResponse));
     }
 
-    public String generateToken(UserLoginInfo userLoginInfo) throws JsonProcessingException {
+    public String generateToken(UserLoginInfo userLoginInfo) {
         long expiredTime = TimeUnit.MINUTES.toMillis(10); // 10分钟后过期
         userLoginInfo.setExpiredTime(expiredTime);
         return jwtService.generateTokenFromUsername(userLoginInfo.getUsername(), userLoginInfo, expiredTime);
     }
 
-    private String generateRefreshToken(UserLoginInfo userLoginInfo) throws JsonProcessingException {
+    private String generateRefreshToken(UserLoginInfo userLoginInfo) {
         long expiredTime = TimeUnit.DAYS.toMillis(30);
         return jwtService.generateTokenFromUsername(userLoginInfo.getUsername(), userLoginInfo, expiredTime);
     }

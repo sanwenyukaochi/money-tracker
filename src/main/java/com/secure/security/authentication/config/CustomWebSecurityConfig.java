@@ -159,12 +159,11 @@ public class CustomWebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
         commonHttpSetting(http);
 
-        LoginFailHandler loginFailHandler = applicationContext.getBean(LoginFailHandler.class);
-        
         // 创建JWT认证过滤器，使用AuthenticationManager
         JwtTokenAuthenticationFilter jwtFilter = new JwtTokenAuthenticationFilter(
                 applicationContext.getBean(JwtService.class),
                 new ProviderManager(List.of(applicationContext.getBean(JwtTokenAuthenticationProvider.class))));
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

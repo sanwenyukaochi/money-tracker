@@ -5,19 +5,18 @@ import com.secure.security.common.web.constant.ResponseCodeConstants;
 import com.secure.security.common.web.exception.BaseException;
 import com.secure.security.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import com.secure.security.authentication.service.UserService;
 import com.secure.security.domain.model.entity.User;
 import com.secure.security.authentication.handler.auth.UserLoginInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SmsAuthenticationProvider implements AuthenticationProvider {
@@ -44,6 +43,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
         UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
         SmsAuthentication token = new SmsAuthentication(currentUser, true, List.of());
         // 认证通过，一定要设成true
+        log.debug("手机号认证成功，用户: {}", currentUser.getUsername());
         return token;
     }
 

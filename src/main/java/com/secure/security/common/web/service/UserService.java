@@ -1,4 +1,4 @@
-package com.secure.security.authentication.service;
+package com.secure.security.common.web.service;
 
 import com.secure.security.common.web.constant.ResponseCodeConstants;
 import com.secure.security.common.web.exception.BaseException;

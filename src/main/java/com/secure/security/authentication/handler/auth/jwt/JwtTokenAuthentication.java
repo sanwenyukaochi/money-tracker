@@ -20,8 +20,7 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
         super(null); // 权限，用不上，直接null
         super.setAuthenticated(authenticated);
     }
-    
-    
+
     public JwtTokenAuthentication(UserLoginInfo currentUser, Boolean authenticated,
                                   Collection<? extends GrantedAuthority> authorities) {
         this.currentUser = currentUser;

@@ -1,6 +1,5 @@
 package com.secure.security.authentication.handler.auth.jwt;
 
-import com.secure.security.authentication.handler.auth.LoginFailHandler;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,13 +18,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * JWT令牌认证过滤器
- * 
  * 职责：
  * 1. 从HTTP请求中提取JWT令牌
  * 2. 创建未认证的JwtTokenAuthentication对象
  * 3. 委托给AuthenticationManager进行实际认证
  * 4. 将认证结果设置到SecurityContext中
- * 
  * 设计理念：
  * - 遵循Spring Security的标准认证流程
  * - Filter只负责提取凭证，不做验证逻辑

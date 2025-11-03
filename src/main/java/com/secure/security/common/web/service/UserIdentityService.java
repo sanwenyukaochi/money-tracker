@@ -1,4 +1,4 @@
-package com.secure.security.authentication.service;
+package com.secure.security.common.web.service;
 
 import com.secure.security.common.web.constant.ResponseCodeConstants;
 import com.secure.security.common.web.exception.BaseException;
@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.secure.security.domain.model.entity.UserIdentity;
 import com.secure.security.domain.repository.UserIdentityRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Slf4j

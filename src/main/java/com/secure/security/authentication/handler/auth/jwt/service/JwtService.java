@@ -66,7 +66,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    public UserLoginInfo validateJwtToken(String authToken, Class<UserLoginInfo> userLoginInfoClass) throws JsonProcessingException {
+    public UserLoginInfo validateJwtToken(String authToken, Class<UserLoginInfo> userLoginInfoClass) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
             Claims claims = claimsJws.getPayload();

@@ -10,6 +10,7 @@ import com.secure.security.authentication.handler.auth.UserLoginInfo;
 import com.secure.security.authentication.handler.auth.github.service.GitHubOAuth2Service;
 import com.secure.security.domain.model.entity.User;
 import com.secure.security.domain.model.entity.UserIdentity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GitHubAuthenticationProvider implements AuthenticationProvider {
@@ -51,6 +53,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
             UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
             GitHubAuthentication token = new GitHubAuthentication(currentUser, true, List.of());
             // 构造认证对象
+            log.debug("GitHub认证成功，用户: {}", currentUser.getUsername());
             return token;
         } catch (Exception e) {
             throw new BaseException(ResponseCodeConstants.ERROR, "GitHub OAuth2 登录失败", HttpStatus.INTERNAL_SERVER_ERROR);
