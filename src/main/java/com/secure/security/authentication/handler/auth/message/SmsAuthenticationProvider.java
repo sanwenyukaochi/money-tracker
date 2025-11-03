@@ -29,10 +29,11 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 用户提交的手机号 + 验证码：
-        String phoneNumber = (String) authentication.getPrincipal();
-        String smsCode = (String) authentication.getCredentials();
+        SmsAuthentication smsAuthentication = (SmsAuthentication) authentication;
+        String phone =  smsAuthentication.getPhone();
+        String smsCode = smsAuthentication.getSmsCode();
 
-        User user = userRepository.findByPhone(phoneNumber)
+        User user = userRepository.findByPhone(phone)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.PHONE_NOT_FOUND, "手机号不存在", HttpStatus.UNAUTHORIZED));
 
         // 验证验证码是否正确

@@ -35,8 +35,9 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 用户提交的用户名 + 密码：
-        String username = (String) authentication.getPrincipal();
-        String password = (String) authentication.getCredentials();
+        UsernameAuthentication usernameAuthentication = (UsernameAuthentication) authentication;
+        String username = usernameAuthentication.getUsername();
+        String password = usernameAuthentication.getPassword();
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED));

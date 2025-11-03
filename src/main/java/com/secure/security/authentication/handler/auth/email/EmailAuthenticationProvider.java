@@ -26,8 +26,9 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String email = (String) authentication.getPrincipal();
-        String password = (String) authentication.getCredentials();
+        EmailAuthentication emailAuthentication = (EmailAuthentication) authentication;
+        String email = emailAuthentication.getEmail();
+        String password = emailAuthentication.getPassword();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.EMAIL_NOT_FOUND, "邮箱不存在", HttpStatus.UNAUTHORIZED));

@@ -35,7 +35,8 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String code = (String) authentication.getPrincipal();
+        GitHubAuthentication gitHubAuthentication = (GitHubAuthentication) authentication;
+        String code = gitHubAuthentication.getCode();
         try {
             OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
             Long providerUserId = Optional.ofNullable(oAuth2User.getAttribute("id"))
