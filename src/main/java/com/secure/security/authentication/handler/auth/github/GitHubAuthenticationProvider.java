@@ -39,25 +39,21 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         GitHubAuthentication gitHubAuthentication = (GitHubAuthentication) authentication;
         String code = gitHubAuthentication.getCode();
-        try {
-            OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
-            Long providerUserId = Optional.ofNullable(oAuth2User.getAttribute("id"))
-                    .filter(Number.class::isInstance)
-                    .map(Number.class::cast)
-                    .map(Number::longValue)
-                    .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
+        OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
+        Long providerUserId = Optional.ofNullable(oAuth2User.getAttribute("id"))
+                .filter(Number.class::isInstance)
+                .map(Number.class::cast)
+                .map(Number::longValue)
+                .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
 
-            UserIdentity userIdentity = userIdentityRepository.findByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB).orElseThrow(() -> new UsernameNotFoundException("找不到用户!"));
-            User user = userRepository.findById(userIdentity.getUserId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED));
+        UserIdentity userIdentity = userIdentityRepository.findByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB).orElseThrow(() -> new UsernameNotFoundException("找不到用户!"));
+        User user = userRepository.findById(userIdentity.getUserId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED));
 
-            UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
-            GitHubAuthentication token = new GitHubAuthentication(currentUser, true, List.of());
-            // 构造认证对象
-            log.debug("GitHub认证成功，用户: {}", currentUser.getUsername());
-            return token;
-        } catch (Exception e) {
-            throw new BaseException(ResponseCodeConstants.ERROR, "GitHub OAuth2 登录失败", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
+        GitHubAuthentication token = new GitHubAuthentication(currentUser, true, List.of());
+        // 构造认证对象
+        log.debug("GitHub认证成功，用户: {}", currentUser.getUsername());
+        return token;
     }
 
     @Override
