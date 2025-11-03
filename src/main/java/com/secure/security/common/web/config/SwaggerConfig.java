@@ -1,4 +1,4 @@
-package com.secure.security.authentication.config;
+package com.secure.security.common.web.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
