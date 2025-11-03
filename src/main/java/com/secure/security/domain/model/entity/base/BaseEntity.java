@@ -1,4 +1,4 @@
-package com.secure.security.domain.model.base;
+package com.secure.security.domain.model.entity.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;

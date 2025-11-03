@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Comment;
-import com.secure.security.domain.model.base.BaseEntity;
+import com.secure.security.domain.model.entity.base.BaseEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
