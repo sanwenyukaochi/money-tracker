@@ -27,7 +27,10 @@ Spring Security Project 是一个基于 **Spring Boot** 的安全认证与授权
 
 * **技术栈**：Java | Spring Boot | Spring Security | JWT | Springdoc OpenAPI | Lombok
 * **用途**：提供企业级安全认证与授权解决方案，支持用户登录、注册、权限管理等功能。
-
+* **流程图**：
+<p align="center">
+    <img src="assets/spring-security-authentication-flow.svg" alt="Authentication Flow"/>
+</p>
 ---
 
 ## ⚡ 快速开始
