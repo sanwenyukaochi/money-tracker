@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserIdentityRepository extends JpaRepository<UserIdentity, Long> {
     List<UserIdentity> findByProviderUserId(Long providerUserId);
 
-    Optional<UserIdentity> findByProviderUserIdAndProvider(Long id, UserIdentity.AuthProvider authProvider);
+    Optional<UserIdentity> findOptionalByProviderUserIdAndProvider(Long id, UserIdentity.AuthProvider authProvider);
 }

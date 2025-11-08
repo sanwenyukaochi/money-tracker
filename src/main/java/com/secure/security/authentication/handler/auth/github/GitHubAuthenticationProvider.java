@@ -46,7 +46,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
                 .map(Number::longValue)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
 
-        UserIdentity userIdentity = userIdentityRepository.findByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB).orElseThrow(() -> new UsernameNotFoundException("找不到用户!"));
+        UserIdentity userIdentity = userIdentityRepository.findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB).orElseThrow(() -> new UsernameNotFoundException("找不到用户!"));
         User user = userRepository.findById(userIdentity.getUserId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED));
 
         UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
