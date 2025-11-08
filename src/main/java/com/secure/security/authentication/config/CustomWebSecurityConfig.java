@@ -108,45 +108,17 @@ public class CustomWebSecurityConfig {
         LoginSuccessHandler loginSuccessHandler = applicationContext.getBean(LoginSuccessHandler.class);
         LoginFailHandler loginFailHandler = applicationContext.getBean(LoginFailHandler.class);
         ObjectMapper objectMapper = applicationContext.getBean(ObjectMapper.class);
-
         // 加一个登录方式。用户名、密码登录
-        UsernameAuthenticationFilter usernameAuthenticationFilter = new UsernameAuthenticationFilter(
-                PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/user/login/application/username"),
-                new ProviderManager(List.of(applicationContext.getBean(UsernameAuthenticationProvider.class))),
-                loginSuccessHandler,
-                loginFailHandler,
-                objectMapper);
-
+        UsernameAuthenticationFilter usernameAuthenticationFilter = new UsernameAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(UsernameAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
         http.addFilterBefore(usernameAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         // 加一个登录方式。短信验证码 登录
-        SmsAuthenticationFilter smsAuthenticationFilter = new SmsAuthenticationFilter(
-                PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/user/login/application/sms"),
-                new ProviderManager(List.of(applicationContext.getBean(SmsAuthenticationProvider.class))),
-                loginSuccessHandler,
-                loginFailHandler,
-                objectMapper);
-
+        SmsAuthenticationFilter smsAuthenticationFilter = new SmsAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(SmsAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
         http.addFilterBefore(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         // 加一个登录方式。邮箱密码 登录
-        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(
-                PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/user/login/application/email"),
-                new ProviderManager(List.of(applicationContext.getBean(EmailAuthenticationProvider.class))),
-                loginSuccessHandler,
-                loginFailHandler,
-                objectMapper);
-
+        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(EmailAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
         http.addFilterBefore(emailAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         // 加一个登录方式。GitHub OAuth2 登录
-        GitHubAuthenticationFilter githubAuthenticationFilter = new GitHubAuthenticationFilter(
-                PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/user/login/oauth/github"),
-                new ProviderManager(List.of(applicationContext.getBean(GitHubAuthenticationProvider.class))),
-                loginSuccessHandler,
-                loginFailHandler,
-                objectMapper);
-
+        GitHubAuthenticationFilter githubAuthenticationFilter = new GitHubAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(GitHubAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
         http.addFilterBefore(githubAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

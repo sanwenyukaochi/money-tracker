@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * 用户名密码登录
@@ -25,15 +27,16 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 @Slf4j
 public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
+            .matcher(HttpMethod.POST, "/user/login/application/username");
+
     private final ObjectMapper objectMapper;
 
-    public UsernameAuthenticationFilter(PathPatternRequestMatcher pathRequestMatcher,
-                                        AuthenticationManager authenticationManager,
+    public UsernameAuthenticationFilter(AuthenticationManager authenticationManager,
                                         AuthenticationSuccessHandler authenticationSuccessHandler,
                                         AuthenticationFailureHandler authenticationFailureHandler,
                                         ObjectMapper objectMapper) {
-        super(pathRequestMatcher);
-        setAuthenticationManager(authenticationManager);
+        super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
         this.objectMapper = objectMapper;
