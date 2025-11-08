@@ -34,4 +34,7 @@ public final class ResponseCodeConstants {
     public static final String TOKEN_EMPTY = "token.empty";
     public static final String TOKEN_PARSE_ERROR = "token.parse_error";
 
+    // HTTP 模块
+    public static final String METHOD_NOT_ALLOWED = "method.not_allowed";
+
 }

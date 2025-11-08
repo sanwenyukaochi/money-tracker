@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.secure.security.domain.model.dto.Result;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -28,6 +29,13 @@ public class WebGlobalExceptionHandler {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.warn("系统异常：code={}, msg={}", ResponseCodeConstants.SYSTEM_ERROR, e.getMessage());
         return Result.builder().code(ResponseCodeConstants.SYSTEM_ERROR).message("系统异常").build();
+    }
+
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public Result<?> exceptionHandler(HttpServletResponse response, HttpRequestMethodNotSupportedException e) {
+        response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
+        log.warn("请求方法异常：code={}, msg={}", ResponseCodeConstants.METHOD_NOT_ALLOWED, e.getMessage());
+        return Result.builder().code(ResponseCodeConstants.METHOD_NOT_ALLOWED).message("请求方法不支持:" + e.getMethod()).build();
     }
 
     @ExceptionHandler(value = NoResourceFoundException.class)

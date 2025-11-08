@@ -11,6 +11,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import com.secure.security.domain.model.dto.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -31,9 +32,13 @@ public class CustomAuthenticationExceptionHandler implements AuthenticationEntry
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException e) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
-        log.warn("登录异常：msg={}", e.getMessage(), e);
-        objectMapper.writeValue(response.getOutputStream(), Result.builder().code(ResponseCodeConstants.LOGIN_FAIL).message("认证失败").build());
+        if (!HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
+            objectMapper.writeValue(response.getOutputStream(), Result.builder().code(ResponseCodeConstants.METHOD_NOT_ALLOWED).message("请求方法不支持" + request.getMethod()).build());
+        } else {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            log.warn("登录异常：msg={}", e.getMessage(), e);
+            objectMapper.writeValue(response.getOutputStream(), Result.builder().code(ResponseCodeConstants.LOGIN_FAIL).message("认证失败").build());
+        }
     }
 }
