@@ -5,18 +5,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/sanwenyukaochi/SpringSecurity/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/sanwenyukaochi/SpringSecurity/ci.yml?branch=main" alt="Build Status">
-  </a>
-  <a href="https://github.com/sanwenyukaochi/SpringSecurity/releases">
-    <img src="https://img.shields.io/github/v/release/sanwenyukaochi/SpringSecurity" alt="Release">
-  </a>
-  <a href="https://github.com/sanwenyukaochi/SpringSecurity/issues">
-    <img src="https://img.shields.io/github/issues/sanwenyukaochi/SpringSecurity" alt="Issues">
-  </a>
-  <a href="https://github.com/sanwenyukaochi/SpringSecurity/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/sanwenyukaochi/SpringSecurity" alt="License">
-  </a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity/stargazers"><img src="https://img.shields.io/github/stars/sanwenyukaochi/SpringSecurity?style=social" alt="GitHub Stars"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity/network/members"><img src="https://img.shields.io/github/forks/sanwenyukaochi/SpringSecurity" alt="GitHub Forks"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity/graphs/contributors"><img src="https://img.shields.io/github/contributors/sanwenyukaochi/SpringSecurity" alt="GitHub Contributors"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity/blob/main/LICENSE"><img src="https://img.shields.io/github/license/sanwenyukaochi/SpringSecurity" alt="GitHub License"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity"><img src="https://img.shields.io/github/languages/top/sanwenyukaochi/SpringSecurity" alt="Top Language"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity"><img src="https://img.shields.io/github/repo-size/sanwenyukaochi/SpringSecurity" alt="Repo Size"></a>
+  <a href="https://github.com/sanwenyukaochi/SpringSecurity/issues"><img src="https://img.shields.io/github/issues/sanwenyukaochi/SpringSecurity" alt="GitHub Issues"></a>
 </p>
 
 ---
