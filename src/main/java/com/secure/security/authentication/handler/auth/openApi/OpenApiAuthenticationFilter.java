@@ -32,7 +32,7 @@ public class OpenApiAuthenticationFilter extends OncePerRequestFilter {
         // 认证开始前，按SpringSecurity设计，要将Authentication设置到SecurityContext里面去。
         log.info("appId认证通过...");
 
-        OpenApiAuthentication authentication = new OpenApiAuthentication();
+        OpenApiAuthenticationToken authentication = new OpenApiAuthenticationToken();
 
         OpenApiLoginInfo userLoginInfo = new OpenApiLoginInfo();
         userLoginInfo.setAppId(appId);

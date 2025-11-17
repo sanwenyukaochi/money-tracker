@@ -28,7 +28,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
-            .matcher(HttpMethod.POST, "/user/login/application/username");
+            .matcher(HttpMethod.POST, "/api/login/application/username");
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

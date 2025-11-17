@@ -6,13 +6,13 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 @Setter
 @Getter
-public class OpenApiAuthentication extends AbstractAuthenticationToken {
+public class OpenApiAuthenticationToken extends AbstractAuthenticationToken {
 
     private String appId; // 前端传过来
     private String appSecurity; // 前端传过来
     private OpenApiLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
 
-    public OpenApiAuthentication() {
+    public OpenApiAuthenticationToken() {
         // 权限，用不上，直接null
         super(null);
     }

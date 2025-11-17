@@ -43,7 +43,7 @@
 
   // 发送POST请求到后台服务器（GitHub OAuth登录）
   if (code) {
-    fetch('/user/login/oauth/github', {
+    fetch('/api/login/oauth/github', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

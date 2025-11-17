@@ -20,7 +20,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
-            .matcher(HttpMethod.POST, "/user/login/application/email");
+            .matcher(HttpMethod.POST, "/api/login/application/email");
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
