@@ -30,16 +30,14 @@ public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessi
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/user/login/application/username");
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public UsernameAuthenticationFilter(AuthenticationManager authenticationManager,
                                         AuthenticationSuccessHandler authenticationSuccessHandler,
-                                        AuthenticationFailureHandler authenticationFailureHandler,
-                                        ObjectMapper objectMapper) {
+                                        AuthenticationFailureHandler authenticationFailureHandler) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
-        this.objectMapper = objectMapper;
     }
 
     @Override

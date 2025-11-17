@@ -3,7 +3,6 @@ package com.secure.security.authentication.config;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.savedrequest.NullRequestCache;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import com.secure.security.authentication.handler.auth.LoginFailHandler;
 import com.secure.security.authentication.handler.auth.LoginSuccessHandler;
 import com.secure.security.authentication.handler.auth.message.SmsAuthenticationFilter;
@@ -35,7 +33,6 @@ import com.secure.security.authentication.handler.auth.jwt.JwtTokenAuthenticatio
 import com.secure.security.authentication.handler.auth.jwt.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -102,39 +99,37 @@ public class CustomWebSecurityConfig {
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
         commonHttpSetting(http);
         // 使用securityMatcher限定当前配置作用的路径
-        http.securityMatcher("/user/login/**")
+        http.securityMatcher("/api/login/**")
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 
         LoginSuccessHandler loginSuccessHandler = applicationContext.getBean(LoginSuccessHandler.class);
         LoginFailHandler loginFailHandler = applicationContext.getBean(LoginFailHandler.class);
-        ObjectMapper objectMapper = applicationContext.getBean(ObjectMapper.class);
+
         // 加一个登录方式。用户名、密码登录
-        UsernameAuthenticationFilter usernameAuthenticationFilter = new UsernameAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(UsernameAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
+        UsernameAuthenticationFilter usernameAuthenticationFilter = new UsernameAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(UsernameAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler);
         http.addFilterBefore(usernameAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // 加一个登录方式。短信验证码 登录
-        SmsAuthenticationFilter smsAuthenticationFilter = new SmsAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(SmsAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
+        SmsAuthenticationFilter smsAuthenticationFilter = new SmsAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(SmsAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler);
         http.addFilterBefore(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // 加一个登录方式。邮箱密码 登录
-        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(EmailAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
+        EmailAuthenticationFilter emailAuthenticationFilter = new EmailAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(EmailAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler);
         http.addFilterBefore(emailAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // 加一个登录方式。GitHub OAuth2 登录
-        GitHubAuthenticationFilter githubAuthenticationFilter = new GitHubAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(GitHubAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler, objectMapper);
+        GitHubAuthenticationFilter githubAuthenticationFilter = new GitHubAuthenticationFilter(new ProviderManager(List.of(applicationContext.getBean(GitHubAuthenticationProvider.class))), loginSuccessHandler, loginFailHandler);
         http.addFilterBefore(githubAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
 
     @Bean
-    public SecurityFilterChain myApiFilterChain(HttpSecurity http) throws Exception {
-        // 使用securityMatcher限定当前配置作用的路径
-        http.securityMatcher("/open-api/business-1")
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+    public SecurityFilterChain JwtTokenApiFilterChain(HttpSecurity http) throws Exception {
         commonHttpSetting(http);
+        // 使用securityMatcher限定当前配置作用的路径
+        http.securityMatcher("/api/**")
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 
         // 创建JWT认证过滤器，使用AuthenticationManager
-        JwtTokenAuthenticationFilter jwtFilter = new JwtTokenAuthenticationFilter(
-                applicationContext.getBean(JwtService.class),
-                new ProviderManager(List.of(applicationContext.getBean(JwtTokenAuthenticationProvider.class))));
+        JwtTokenAuthenticationFilter jwtFilter = new JwtTokenAuthenticationFilter(applicationContext.getBean(JwtService.class), new ProviderManager(List.of(applicationContext.getBean(JwtTokenAuthenticationProvider.class))));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

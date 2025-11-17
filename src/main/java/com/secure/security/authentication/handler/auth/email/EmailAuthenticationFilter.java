@@ -22,16 +22,14 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/user/login/application/email");
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public EmailAuthenticationFilter(AuthenticationManager authenticationManager,
                                      AuthenticationSuccessHandler authenticationSuccessHandler,
-                                     AuthenticationFailureHandler authenticationFailureHandler,
-                                     ObjectMapper objectMapper) {
+                                     AuthenticationFailureHandler authenticationFailureHandler) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
-        this.objectMapper = objectMapper;
     }
 
     @Override
