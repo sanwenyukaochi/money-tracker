@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.6'
+    id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -18,12 +18,12 @@ repositories {
 }
 
 ext {
-    set('springdocVersion', "2.8.9")
-    set('commonsLangVersion', "3.18.0")
+    set('springdocVersion', "3.0.0-RC1")
+    set('commonsLangVersion', "3.20.0")
     set('jjwtVersion', "0.13.0")
     set('postgresqlVersion', "42.7.8")
     set('googleauthVersion', "1.5.0")
-    set('hutoolVersion', "5.8.24")
+    set('hutoolVersion', "5.8.41")
 }
 
 dependencies {
@@ -41,7 +41,7 @@ dependencies {
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "cn.hutool:hutool-core:${hutoolVersion}"
-    implementation "com.warrenstrange:googleauth:${googleauthVersion}"
+    //implementation "com.warrenstrange:googleauth:${googleauthVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
