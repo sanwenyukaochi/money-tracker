@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Comment;
 
 @Getter
 @Setter
@@ -19,9 +18,8 @@ import org.hibernate.annotations.Comment;
 public abstract class BaseEntity {
 
     @Id
-    @Column(name = "id", nullable = false)
-    @Comment("主键ID")
-    @Schema(name = "id", title = "主键ID")
+    @Column(comment = "主键ID", name = "id", nullable = false)
+    @Schema(title = "主键ID", name = "id")
     private Long id;
 
 }
