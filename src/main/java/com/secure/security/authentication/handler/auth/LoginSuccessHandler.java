@@ -41,13 +41,9 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
 
     @PostConstruct
     public void disableRedirectStrategy() {
-        setRedirectStrategy(new RedirectStrategy() {
-            @Override
-            public void sendRedirect(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull String url)
-                    throws IOException {
+        setRedirectStrategy((_, _, _) -> {
                 // 更改重定向策略，前后端分离项目，后端使用RestFul风格，无需做重定向
                 // Do nothing, no redirects in REST
-            }
         });
     }
 
