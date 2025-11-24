@@ -11,6 +11,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import com.secure.security.domain.model.dto.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -29,12 +30,12 @@ public class CustomAuthorizationExceptionHandler implements AccessDeniedHandler 
     private final ObjectMapper objectMapper;
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response,
-                       AccessDeniedException e) throws IOException, ServletException {
+    public void handle(@NonNull HttpServletRequest request, HttpServletResponse response,
+                       @NonNull AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
 
-        log.warn("访问异常：msg={}", e.getMessage(), e);
+        log.warn("访问异常：msg={}", accessDeniedException.getMessage(), accessDeniedException);
         objectMapper.writeValue(response.getOutputStream(), Result.builder().code(ResponseCodeConstants.AUTH_ACCESS_DENIED).message("授权失败").build());
     }
 }

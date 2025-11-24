@@ -15,6 +15,7 @@ java {
 
 repositories {
     mavenCentral()
+    flatDir { dirs 'libs' }
 }
 
 ext {
@@ -24,6 +25,7 @@ ext {
     set('postgresqlVersion', "42.7.8")
     set('googleauthVersion', "1.5.0")
     set('hutoolVersion', "5.8.41")
+    set('jspecifyVersion', "1.0.0")
 }
 
 dependencies {
@@ -42,6 +44,7 @@ dependencies {
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "cn.hutool:hutool-core:${hutoolVersion}"
     //implementation "com.warrenstrange:googleauth:${googleauthVersion}"
+    implementation "org.jspecify:jspecify:${jspecifyVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'

@@ -1,6 +1,7 @@
 package com.secure.security.authentication.handler.auth;
 
 import lombok.*;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,7 +33,7 @@ public class UserLoginInfo implements UserDetails {
     private Long expiredTime; // JWT过期时间
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         //TODO 权限
         return List.of();
     }

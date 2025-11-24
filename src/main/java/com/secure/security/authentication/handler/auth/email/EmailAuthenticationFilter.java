@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,7 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+                                                @NonNull HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         log.debug("use EmailAuthenticationFilter");
 
         EmailLoginRequest emailLoginRequest = objectMapper.readValue(request.getInputStream(), EmailLoginRequest.class);

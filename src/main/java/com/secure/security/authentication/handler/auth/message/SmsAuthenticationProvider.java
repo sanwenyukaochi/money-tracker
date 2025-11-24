@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import com.secure.security.domain.model.entity.User;
 import com.secure.security.authentication.handler.auth.UserLoginInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         // 用户提交的手机号 + 验证码：
         SmsAuthenticationToken smsAuthenticationToken = (SmsAuthenticationToken) authentication;
         String phone =  smsAuthenticationToken.getPhone();
@@ -48,7 +49,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@NonNull Class<?> authentication) {
         return SmsAuthenticationToken.class.isAssignableFrom(authentication);
     }
 

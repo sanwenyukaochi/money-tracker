@@ -11,6 +11,7 @@ import com.secure.security.authentication.handler.auth.UserLoginInfo;
 import com.secure.security.authentication.handler.auth.github.service.GitHubOAuth2Service;
 import com.secure.security.domain.model.entity.UserIdentity;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -35,7 +36,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         GitHubAuthenticationToken gitHubAuthenticationToken = (GitHubAuthenticationToken) authentication;
         String code = gitHubAuthenticationToken.getCode();
         OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
@@ -56,7 +57,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@NonNull Class<?> authentication) {
         return GitHubAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

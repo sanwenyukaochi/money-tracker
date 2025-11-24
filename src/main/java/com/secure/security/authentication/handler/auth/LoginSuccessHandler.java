@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import com.secure.security.authentication.handler.auth.jwt.service.JwtService;
 import com.secure.security.common.web.exception.BaseException;
 import com.secure.security.domain.model.dto.Result;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +43,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
     public void disableRedirectStrategy() {
         setRedirectStrategy(new RedirectStrategy() {
             @Override
-            public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url)
+            public void sendRedirect(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull String url)
                     throws IOException {
                 // 更改重定向策略，前后端分离项目，后端使用RestFul风格，无需做重定向
                 // Do nothing, no redirects in REST
@@ -51,7 +52,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+    public void onAuthenticationSuccess(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         Object principal = authentication.getPrincipal();
         if (!(principal instanceof UserLoginInfo currentUser)) {

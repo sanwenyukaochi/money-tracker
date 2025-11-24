@@ -11,6 +11,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import com.secure.security.domain.model.dto.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -28,11 +29,11 @@ public class CustomAuthenticationExceptionHandler implements AuthenticationEntry
     private final ObjectMapper objectMapper;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException e) throws IOException, ServletException {
+    public void commence(@NonNull HttpServletRequest request, HttpServletResponse response,
+                         @NonNull AuthenticationException authenticationException) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        log.warn("登录异常：msg={}", e.getMessage(), e);
+        log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);
         objectMapper.writeValue(response.getOutputStream(), Result.builder().code(ResponseCodeConstants.AUTH_INVALID_CREDENTIALS).message("认证失败").build());
     }
 }

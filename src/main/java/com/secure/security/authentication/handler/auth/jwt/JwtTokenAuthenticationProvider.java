@@ -5,6 +5,7 @@ import com.secure.security.authentication.handler.auth.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +25,7 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     @SneakyThrows
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         // JWT：
         JwtTokenAuthenticationToken jwtAuth = (JwtTokenAuthenticationToken) authentication;
         String jwtToken = jwtAuth.getJwtToken();
@@ -39,7 +40,7 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@NonNull Class<?> authentication) {
         return JwtTokenAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
