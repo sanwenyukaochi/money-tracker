@@ -40,27 +40,18 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
             log.warn("认证异常：code={}, msg={}, status={}", e.getCode(), e.getMessage(), e.getHttpStatus(), e);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(e.getHttpStatus().value());
-            objectMapper.writeValue(response.getOutputStream(), Result.builder()
-                    .code(e.getCode())
-                    .message(e.getMessage())
-                    .build());
+            objectMapper.writeValue(response.getOutputStream(), Result.error(e.getCode(), e.getMessage()));
         } catch (AuthenticationException | AccessDeniedException e) {
             log.warn("Spring Security异常：msg={}", e.getMessage(), e);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            objectMapper.writeValue(response.getOutputStream(), Result.builder()
-                    .code(ResponseCodeConstants.SYSTEM_ERROR)
-                    .message(e.getMessage())
-                    .build());
+            objectMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, e.getMessage()));
         } catch (Exception e) {
             log.warn("未知异常：msg={}",e.getMessage(), e);
             // 未知异常
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            objectMapper.writeValue(response.getOutputStream(), Result.builder()
-                    .code(ResponseCodeConstants.SYSTEM_ERROR)
-                    .message("未知异常")
-                    .build());
+            objectMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, "未知异常"));
         }
     }
 }

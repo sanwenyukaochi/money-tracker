@@ -1,10 +1,6 @@
 package com.secure.security.domain.model.dto;
 
 import com.secure.security.common.web.constant.ResponseCodeConstants;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 统一 JSON 返回结构
@@ -13,38 +9,37 @@ import lombok.NoArgsConstructor;
  * @version 1.0
  * @since 2025-07-13
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Result<T> {
+public record Result<T>(
+        String code,
+        String message,
+        T data
+) {
 
-    private String code;
-    private String message;
-    private T data;
-
-    // -------------------- Success --------------------
     public static <T> Result<T> success() {
-        return Result.<T>builder().code(ResponseCodeConstants.SUCCESS).message(ResponseCodeConstants.SUCCESS).data(null).build();
+        return new Result<>(ResponseCodeConstants.SUCCESS, ResponseCodeConstants.SUCCESS, null);
     }
 
     public static <T> Result<T> success(String message) {
-        return Result.<T>builder().code(ResponseCodeConstants.SUCCESS).message(message).data(null).build();
+        return new Result<>(ResponseCodeConstants.SUCCESS, message, null);
     }
 
     public static <T> Result<T> success(String message, T data) {
-        return Result.<T>builder().code(ResponseCodeConstants.SUCCESS).message(message).data(data).build();
+        return new Result<>(ResponseCodeConstants.SUCCESS, message, data);
+    }
+
+    public static <T> Result<T> success(String code, String message, T data) {
+        return new Result<>(code, message, data);
     }
 
     public static <T> Result<T> error(String message) {
-        return Result.<T>builder().code(ResponseCodeConstants.ERROR).message(message).data(null).build();
+        return new Result<>(ResponseCodeConstants.ERROR, message, null);
     }
 
     public static <T> Result<T> error(String message, T data) {
-        return Result.<T>builder().code(ResponseCodeConstants.ERROR).message(message).data(data).build();
+        return new Result<>(ResponseCodeConstants.ERROR, message, data);
     }
 
     public static <T> Result<T> error(T data) {
-        return Result.<T>builder().code(ResponseCodeConstants.ERROR).message(ResponseCodeConstants.ERROR).data(data).build();
+        return new Result<>(ResponseCodeConstants.ERROR, ResponseCodeConstants.ERROR, data);
     }
 }
