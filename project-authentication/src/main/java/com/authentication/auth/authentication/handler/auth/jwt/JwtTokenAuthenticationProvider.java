@@ -1,0 +1,46 @@
+package com.authentication.auth.authentication.handler.auth.jwt;
+
+import com.authentication.auth.authentication.handler.auth.UserLoginInfo;
+import com.authentication.auth.authentication.handler.auth.jwt.service.JwtService;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * JWT认证提供者
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
+
+    private final JwtService jwtService;
+
+    @Override
+    @SneakyThrows
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
+        // JWT：
+        JwtTokenAuthenticationToken jwtAuth = (JwtTokenAuthenticationToken) authentication;
+        String jwtToken = jwtAuth.getJwtToken();
+
+        // 验证JWT并提取用户信息
+        UserLoginInfo currentUser = jwtService.validateJwtToken(jwtToken, UserLoginInfo.class);
+        JwtTokenAuthenticationToken authenticatedToken = new JwtTokenAuthenticationToken(currentUser, true, List.of());
+        // 认证通过，这里一定要设成true
+        log.debug("JWT认证成功，用户: {}", currentUser.getUsername());
+        return authenticatedToken;
+
+    }
+
+    @Override
+    public boolean supports(@NonNull Class<?> authentication) {
+        return JwtTokenAuthenticationToken.class.isAssignableFrom(authentication);
+    }
+}
