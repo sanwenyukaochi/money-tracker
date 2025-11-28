@@ -1,7 +1,7 @@
 package com.common.common.web.service;
 
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.exception.BaseException;
+import com.common.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.common.domain.model.entity.UserIdentity;

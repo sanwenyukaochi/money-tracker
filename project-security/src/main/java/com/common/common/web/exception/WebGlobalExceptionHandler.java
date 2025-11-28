@@ -1,12 +1,11 @@
 package com.common.common.web.exception;
 
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.exception.BaseException;
+import com.common.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.common.web.dto.Result;
+import com.common.domain.model.dto.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -2,8 +2,8 @@ package com.common.authentication.handler.auth.jwt.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.exception.BaseException;
+import com.common.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.exception.BaseException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

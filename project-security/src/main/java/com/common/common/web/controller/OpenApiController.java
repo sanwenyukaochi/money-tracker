@@ -2,7 +2,7 @@ package com.common.common.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import com.common.authentication.handler.auth.openApi.OpenApiLoginInfo;
-import com.common.web.dto.Result;
+import com.common.domain.model.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

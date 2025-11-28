@@ -1,6 +1,5 @@
-package com.common.web.dto;
-
-import com.common.web.constant.ResponseCodeConstants;
+package com.common.domain.model.dto;
+import com.common.common.web.constant.ResponseCodeConstants;
 
 public record Result<T>(
         String code,

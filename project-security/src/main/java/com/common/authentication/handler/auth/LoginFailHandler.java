@@ -1,8 +1,8 @@
 package com.common.authentication.handler.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.dto.Result;
+import com.common.common.web.constant.ResponseCodeConstants;
+import com.common.domain.model.dto.Result;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

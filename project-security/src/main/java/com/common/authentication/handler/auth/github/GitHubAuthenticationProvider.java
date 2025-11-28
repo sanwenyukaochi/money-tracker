@@ -2,8 +2,8 @@ package com.common.authentication.handler.auth.github;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.common.authentication.handler.auth.github.dto.GitHubOAuthMeta;
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.exception.BaseException;
+import com.common.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.exception.BaseException;
 import com.common.domain.repository.UserIdentityRepository;
 import com.common.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

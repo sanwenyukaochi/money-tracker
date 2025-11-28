@@ -1,4 +1,4 @@
-package com.common.web.constant;
+package com.common.common.web.constant;
 
 public final class ResponseCodeConstants {
 

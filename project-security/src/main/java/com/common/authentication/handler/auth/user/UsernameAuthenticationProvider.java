@@ -1,8 +1,8 @@
 package com.common.authentication.handler.auth.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.common.web.constant.ResponseCodeConstants;
-import com.common.web.exception.BaseException;
+import com.common.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.exception.BaseException;
 import com.common.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.common.domain.model.entity.User;

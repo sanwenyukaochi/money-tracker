@@ -1,7 +1,7 @@
 package com.common.authentication.handler.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
-import com.common.web.dto.Result;
+import com.common.domain.model.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;

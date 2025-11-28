@@ -1,7 +1,7 @@
 package com.common.authentication.handler.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.common.web.constant.ResponseCodeConstants;
+import com.common.common.web.constant.ResponseCodeConstants;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import lombok.RequiredArgsConstructor;
 import com.common.authentication.handler.auth.jwt.service.JwtService;
-import com.common.web.exception.BaseException;
-import com.common.web.dto.Result;
+import com.common.common.web.exception.BaseException;
+import com.common.domain.model.dto.Result;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;

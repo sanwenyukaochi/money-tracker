@@ -1,7 +1,7 @@
 package com.common.common.web.controller;
 
 import com.common.authentication.handler.auth.UserLoginInfo;
-import com.common.web.dto.Result;
+import com.common.domain.model.dto.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
