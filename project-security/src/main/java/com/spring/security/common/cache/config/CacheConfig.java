@@ -1,5 +1,6 @@
 package com.spring.security.common.cache.config;
 
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.spring.security.authentication.handler.auth.jwt.constant.JWTConstants;
 import com.spring.security.common.cache.constant.RedisCache;
 import org.springframework.cache.annotation.EnableCaching;
@@ -11,7 +12,6 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -25,9 +25,9 @@ public class CacheConfig {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJacksonJsonRedisSerializer(new tools.jackson.databind.ObjectMapper()));
+        redisTemplate.setValueSerializer(genericJacksonJsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new GenericJacksonJsonRedisSerializer(new ObjectMapper()));
+        redisTemplate.setHashValueSerializer(genericJacksonJsonRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
@@ -39,13 +39,21 @@ public class CacheConfig {
         //序列化配置
         RedisCacheConfiguration defaultCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new JacksonJsonRedisSerializer<>(new ObjectMapper(), Object.class)))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(genericJacksonJsonRedisSerializer()))
                 .disableCachingNullValues();
         return RedisCacheManager.builder(cacheWriter)
                 .cacheDefaults(defaultCacheConfiguration)
                 .transactionAware()
                 .withInitialCacheConfigurations(Collections.singletonMap(
-                        RedisCache.USER_INFO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(JWTConstants.tokenExpiredTime)).disableCachingNullValues()))
+                        RedisCache.USER_INFO, defaultCacheConfiguration.entryTtl(Duration.ofMinutes(JWTConstants.tokenExpiredTime))))
+                .build();
+    }
+
+    @Bean
+    public GenericJacksonJsonRedisSerializer genericJacksonJsonRedisSerializer() {
+        return GenericJacksonJsonRedisSerializer.builder()
+                .enableDefaultTyping(BasicPolymorphicTypeValidator.builder().allowIfBaseType(Object.class).build())
+                .enableSpringCacheNullValueSupport()
                 .build();
     }
 
