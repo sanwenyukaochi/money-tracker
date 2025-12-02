@@ -52,8 +52,8 @@ subprojects {
         implementation "cn.hutool:hutool-core:${hutoolVersion}"
         implementation "com.warrenstrange:googleauth:${googleauthVersion}"
         implementation "org.jspecify:jspecify:${jspecifyVersion}"
-        compileOnly "org.projectlombok:lombok${lombokVersion}"
-        annotationProcessor "org.projectlombok:lombok${lombokVersion}"
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
     }
 
 }
