@@ -7,6 +7,9 @@ import lombok.experimental.Accessors;
 import jakarta.persistence.Column;
 import com.spring.security.domain.model.entity.base.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
@@ -62,5 +65,9 @@ public class User extends BaseEntity {
     @Column(comment = "是否启用双因素认证（true=启用，false=未启用）", name = "two_factor_enabled", nullable = false)
     private Boolean twoFactorEnabled = false;
 
+    @Schema(title = "用户绑定的所有第三方登录信息", description = "一个用户可以绑定多个第三方账号（GitHub、Google、微信等）")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<UserIdentity> identities = new ArrayList<>();
 
 }

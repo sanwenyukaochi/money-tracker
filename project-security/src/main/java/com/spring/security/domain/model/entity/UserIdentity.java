@@ -20,9 +20,12 @@ import com.spring.security.domain.model.entity.base.BaseEntity;
 @Schema(name = "UserIdentity", title = "用户登录绑定对象", description = "存储用户绑定的第三方登录信息")
 public class UserIdentity extends BaseEntity {
 
-    @Schema(title = "用户ID", description = "对应 sys_user 表主键")
-    @Column(comment = "用户ID", name = "user_id", nullable = false)
-    private Long userId;
+    @Schema(title = "所属用户", description = "该第三方登录方式属于哪个用户")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(comment = "用户ID", name = "user_id", referencedColumnName = "id", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_identity_user"))
+    @ToString.Exclude
+    private User user;
 
     @Schema(title = "登录提供商", example = "GITHUB", description = "第三方登录来源，如 GITHUB、GOOGLE、WECHAT")
     @Column(comment = "登录提供商", name = "provider", nullable = false, length = 30)
