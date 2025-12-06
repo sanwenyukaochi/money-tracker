@@ -1,5 +1,7 @@
 package com.spring.security.common.cache.config;
 
+import tools.jackson.core.json.JsonWriteFeature;
+import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.spring.security.authentication.handler.auth.jwt.constant.JWTConstants;
 import com.spring.security.common.cache.constant.RedisCache;
@@ -52,6 +54,7 @@ public class CacheConfig {
     @Bean
     public GenericJacksonJsonRedisSerializer genericJacksonJsonRedisSerializer() {
         return GenericJacksonJsonRedisSerializer.builder()
+                .customize((JsonMapper.Builder builder) -> builder.configure(JsonWriteFeature.WRITE_NUMBERS_AS_STRINGS, true))
                 .enableDefaultTyping(BasicPolymorphicTypeValidator.builder().allowIfBaseType(Object.class).build())
                 .enableSpringCacheNullValueSupport()
                 .build();

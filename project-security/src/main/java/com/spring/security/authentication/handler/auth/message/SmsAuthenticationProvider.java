@@ -24,8 +24,6 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
 
-    private final ObjectMapper objectMapper;
-
     @Override
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         // 用户提交的手机号 + 验证码：
@@ -41,7 +39,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
             throw new BaseException(ResponseCodeConstants.AUTH_SMS_CODE_ERROR, "验证码错误", HttpStatus.UNAUTHORIZED);
         }
 
-        UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
+        UserLoginInfo currentUser = new UserLoginInfo(null, user.getId(), user.getUsername(), user.getPassword(), user.getPhone(), user.getEmail(), user.getAccountNonLocked(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getEnabled(), user.getTwoFactorSecret(), user.getTwoFactorEnabled(), null);//TODO 权限
         SmsAuthenticationToken token = new SmsAuthenticationToken(currentUser, true, List.of());
         // 认证通过，一定要设成true
         log.debug("手机号认证成功，用户: {}", currentUser.getUsername());

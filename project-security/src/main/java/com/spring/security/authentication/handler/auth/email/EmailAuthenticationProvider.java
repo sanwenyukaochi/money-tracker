@@ -25,7 +25,6 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ObjectMapper objectMapper;
 
     @Override
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
@@ -39,7 +38,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
             throw new BaseException(ResponseCodeConstants.AUTH_PASSWORD_ERROR, "密码错误", HttpStatus.UNAUTHORIZED);
         }
 
-        UserLoginInfo currentUser = objectMapper.convertValue(user, UserLoginInfo.class);//TODO 权限
+        UserLoginInfo currentUser = new UserLoginInfo(null, user.getId(), user.getUsername(), user.getPassword(), user.getPhone(), user.getEmail(), user.getAccountNonLocked(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getEnabled(), user.getTwoFactorSecret(), user.getTwoFactorEnabled(), null);//TODO 权限
         EmailAuthenticationToken token = new EmailAuthenticationToken(currentUser, true, List.of());
         // 认证通过，这里一定要设成true
         log.debug("Email认证成功，用户: {}", currentUser.getUsername());

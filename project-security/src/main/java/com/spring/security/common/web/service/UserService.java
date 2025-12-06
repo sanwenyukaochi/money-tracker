@@ -3,7 +3,6 @@ package com.spring.security.common.web.service;
 import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import com.spring.security.common.web.constant.ResponseCodeConstants;
 import com.spring.security.common.web.exception.BaseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import com.spring.security.domain.model.entity.User;
 import com.spring.security.domain.repository.UserRepository;
@@ -19,12 +18,11 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final ObjectMapper objectMapper;
-
     @Override
     @NonNull
     public UserLoginInfo loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return objectMapper.convertValue(getUserByUsername(username), UserLoginInfo.class);
+        User user = getUserByUsername(username);
+        return new UserLoginInfo(null, user.getId(), user.getUsername(), user.getPassword(), user.getPhone(), user.getEmail(), user.getAccountNonLocked(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getEnabled(), user.getTwoFactorSecret(), user.getTwoFactorEnabled(), null);
     }
 
     public User getUserByUsername(String username) {
