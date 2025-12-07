@@ -42,8 +42,8 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
     @PostConstruct
     public void disableRedirectStrategy() {
         setRedirectStrategy((_, _, _) -> {
-                // 更改重定向策略，前后端分离项目，后端使用RestFul风格，无需做重定向
-                // Do nothing, no redirects in REST
+            // 更改重定向策略，前后端分离项目，后端使用RestFul风格，无需做重定向
+            // Do nothing, no redirects in REST
         });
     }
 
@@ -52,7 +52,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
                                         Authentication authentication) throws IOException {
         Object principal = authentication.getPrincipal();
         if (!(principal instanceof UserLoginInfo currentUser)) {
-            throw new BaseException(ResponseCodeConstants.TYPE_ERROR,"登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！", HttpStatus.BAD_REQUEST);
+            throw new BaseException(ResponseCodeConstants.TYPE_ERROR, "登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！", HttpStatus.BAD_REQUEST);
         }
         currentUser.setSessionId(UUID.randomUUID().toString());
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = new JwtTokenUserLoginInfo(currentUser.getSessionId(), currentUser.getUsername());
@@ -66,7 +66,10 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
                 .filter(Map.class::isInstance)
                 .map(Map.class::cast)
                 .orElse(Map.of());
-        UserLoginInfo userDetails = userCache.getUserLoginInfo(jwtTokenUserLoginInfo.getUsername(), jwtTokenUserLoginInfo.getSessionId(), jwtTokenUserLoginInfo.getExpiredTime());
+
+        boolean isNewUser = Boolean.FALSE.equals(additionalInfo.get("isNewUser")) || authentication.getDetails() == null;
+        if (isNewUser) userCache.getUserLoginInfo(jwtTokenUserLoginInfo.getUsername(), jwtTokenUserLoginInfo.getSessionId(), jwtTokenUserLoginInfo.getExpiredTime());
+
         LoginResponse loginResponse = new LoginResponse(token, refreshToken, additionalInfo);
         // 虽然APPLICATION_JSON_UTF8_VALUE过时了，但也要用。因为Postman工具不声明utf-8编码就会出现乱码
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

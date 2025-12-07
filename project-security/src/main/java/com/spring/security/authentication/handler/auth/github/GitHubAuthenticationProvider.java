@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthMeta;
 import com.spring.security.common.web.constant.ResponseCodeConstants;
 import com.spring.security.common.web.exception.BaseException;
-import com.spring.security.domain.model.entity.User;
 import com.spring.security.domain.repository.UserIdentityRepository;
 import com.spring.security.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
