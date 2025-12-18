@@ -1,7 +1,5 @@
 package com.spring.security.common.web.config;
 
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.IdUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +16,6 @@ import java.util.Optional;
 @EnableJpaAuditing
 @EnableConfigurationProperties(CommonWebConfig.ProxyProperties.class)
 public class CommonWebConfig {
-
-    @Bean
-    public Snowflake snowflake() {
-        return IdUtil.getSnowflake(1, 1);
-    }
 
     @Bean
     public RestTemplate restTemplate(ProxyProperties proxyProperties) {
