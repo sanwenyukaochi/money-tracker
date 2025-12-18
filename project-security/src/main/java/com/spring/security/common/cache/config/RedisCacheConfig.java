@@ -46,16 +46,23 @@ public class RedisCacheConfig {
         return Redisson.create(redissonConfig);
     }
 
-    @Bean("redissonCacheManager")
+    @Bean("cacheManagerDeprecated")
     @Deprecated
     @ConditionalOnProperty(prefix = "app.cache", name = "enable-redisson-cache-manager", havingValue = "true", matchIfMissing = false)
-    public CacheManager redissonSpringCacheManager(RedissonClient redissonClient) {
-        return new RedissonSpringCacheManager(redissonClient, Map.of(
+    public CacheManager cacheManagerDeprecated(RedissonClient redissonClient) {
+        Map<String, CacheConfig> config = Map.of(
                 RedisCache.USER_INFO, new CacheConfig(
                         Duration.ofMinutes(JWTConstants.tokenExpiredTime).toMillis(),
                         Duration.ofMinutes(JWTConstants.tokenExpiredTime).toMillis()
                 )
-        ));
+        );
+        RedissonSpringCacheManager cacheManager = new RedissonSpringCacheManager(redissonClient, config);
+        cacheManager.setCodec(new JsonJacksonCodec());
+        cacheManager.setAllowNullValues(true);
+        //cacheManager.setCacheNames(); 
+        //cacheManager.setTransactionAware(true); 
+        //cacheManager.setConfig();
+        return cacheManager;
     }
 
     @Bean
@@ -79,7 +86,7 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+    public RedisCacheManager cacheManager(RedisConnectionFactory  redisConnectionFactory) {
         //启用锁机制
         RedisCacheWriter cacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
         //序列化配置
