@@ -30,6 +30,7 @@ ext {
     set('lombokVersion', "1.18.42")
     set('cosidStarterVersion', "3.0.0")
     set('cosidVersion', "2.15.1")
+    set('redissonVersion', "4.0.0")
 }
 
 subprojects {
@@ -49,6 +50,7 @@ subprojects {
         runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
         implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
         implementation "org.apache.commons:commons-lang3:${commonsLangVersion}"
+        implementation "org.redisson:redisson:${redissonVersion}"
         implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
         runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
         runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
@@ -59,7 +61,6 @@ subprojects {
 
         implementation "me.ahoo.cosid:cosid-spring-boot-starter:${cosidStarterVersion}"
         implementation "me.ahoo.cosid:cosid-spring-redis:${cosidVersion}"
-
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
     }
