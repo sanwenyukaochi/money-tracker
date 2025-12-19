@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.0' apply false
+    id 'org.springframework.boot' version '4.0.1' apply false
     id 'io.spring.dependency-management' version '1.1.7' apply false
 }
 
@@ -18,7 +18,7 @@ allprojects {
 }
 
 ext {
-    set('springCloudVersion', "2025.1.0-RC1")
+    set('springCloudVersion', "2025.1.0")
     set('springdocVersion', "3.0.0")
     set('commonsLangVersion', "3.20.0")
     set('jjwtVersion', "0.13.0")
@@ -26,10 +26,9 @@ ext {
     set('googleauthVersion', "1.5.0")
     set('hutoolVersion', "5.8.41")
     set('jspecifyVersion', "1.0.0")
-    set('flywayVersion', "11.18.0")
+    set('flywayVersion', "11.19.0")
     set('lombokVersion', "1.18.42")
-    set('cosidStarterVersion', "3.0.0")
-    set('cosidVersion', "2.15.1")
+    set('cosidVersion', "3.0.1")
     set('redissonVersion', "4.0.0")
 }
 
@@ -59,7 +58,7 @@ subprojects {
         implementation "com.warrenstrange:googleauth:${googleauthVersion}"
         implementation "org.jspecify:jspecify:${jspecifyVersion}"
 
-        implementation "me.ahoo.cosid:cosid-spring-boot-starter:${cosidStarterVersion}"
+        implementation "me.ahoo.cosid:cosid-spring-boot-starter:${cosidVersion}"
         implementation "me.ahoo.cosid:cosid-spring-redis:${cosidVersion}"
         compileOnly "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok"
