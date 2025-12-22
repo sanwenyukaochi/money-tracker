@@ -4,6 +4,7 @@ import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import com.spring.security.common.cache.constant.RedisCache;
 import com.spring.security.common.web.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +22,7 @@ public class UserCache  {
         return userLoginInfo;
     }
 
+    @CacheEvict(value = RedisCache.USER_INFO, key = "#username")
+    public void evictUserLoginInfo(String username) {
+    }
 }
