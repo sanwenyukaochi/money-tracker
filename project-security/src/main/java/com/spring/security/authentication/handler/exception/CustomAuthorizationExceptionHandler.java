@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import lombok.RequiredArgsConstructor;
 import com.spring.security.domain.model.dto.Result;
@@ -32,9 +33,9 @@ public class CustomAuthorizationExceptionHandler implements AccessDeniedHandler 
     @Override
     public void handle(@NonNull HttpServletRequest request, HttpServletResponse response,
                        @NonNull AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
-
         log.warn("访问异常：msg={}", accessDeniedException.getMessage(), accessDeniedException);
         jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_ACCESS_DENIED, "授权失败"));
     }

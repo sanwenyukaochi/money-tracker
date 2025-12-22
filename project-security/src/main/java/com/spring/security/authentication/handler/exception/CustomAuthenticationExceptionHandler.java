@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import lombok.RequiredArgsConstructor;
 import com.spring.security.domain.model.dto.Result;
@@ -31,6 +32,7 @@ public class CustomAuthenticationExceptionHandler implements AuthenticationEntry
     @Override
     public void commence(@NonNull HttpServletRequest request, HttpServletResponse response,
                          @NonNull AuthenticationException authenticationException) throws IOException, ServletException {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);

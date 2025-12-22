@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,17 +39,19 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (BaseException e) {
             log.warn("认证异常：code={}, msg={}, status={}", e.getCode(), e.getMessage(), e.getHttpStatus(), e);
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(e.getHttpStatus().value());
             jsonMapper.writeValue(response.getOutputStream(), Result.error(e.getCode(), e.getMessage()));
         } catch (AuthenticationException | AccessDeniedException e) {
             log.warn("Spring Security异常：msg={}", e.getMessage(), e);
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
             jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, e.getMessage()));
         } catch (Exception e) {
             log.warn("未知异常：msg={}",e.getMessage(), e);
-            // 未知异常
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, "未知异常"));

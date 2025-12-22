@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -72,7 +73,9 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
 
         LoginResponse loginResponse = new LoginResponse(token, refreshToken, additionalInfo);
         // 虽然APPLICATION_JSON_UTF8_VALUE过时了，但也要用。因为Postman工具不声明utf-8编码就会出现乱码
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.OK.value());
         jsonMapper.writeValue(response.getOutputStream(), Result.success("登录成功", loginResponse));
     }
 

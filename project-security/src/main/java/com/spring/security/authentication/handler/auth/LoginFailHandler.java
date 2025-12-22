@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * AbstractAuthenticationProcessingFilter抛出AuthenticationException异常后，会跑到这里来
@@ -30,9 +31,9 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(@NonNull HttpServletRequest request, HttpServletResponse response,
                                         @NonNull AuthenticationException authenticationException) throws IOException, ServletException {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);
         jsonMapper.writeValue(response.getOutputStream(), Result.success(ResponseCodeConstants.AUTH_LOGIN_FAILED, authenticationException.getMessage(), null));
     }
