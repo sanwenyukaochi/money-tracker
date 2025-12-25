@@ -56,7 +56,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             // 3. 创建未认证的Authentication对象
-            JwtTokenAuthenticationToken unauthenticatedToken = new JwtTokenAuthenticationToken(jwtToken, false);
+            JwtTokenAuthenticationToken unauthenticatedToken = new JwtTokenAuthenticationToken(jwtToken);
 
             // 4. 委托给AuthenticationManager进行认证
             Authentication authenticatedToken = authenticationManager.authenticate(unauthenticatedToken);

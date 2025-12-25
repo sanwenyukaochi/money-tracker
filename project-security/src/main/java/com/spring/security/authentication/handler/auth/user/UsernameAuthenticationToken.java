@@ -24,18 +24,18 @@ public class UsernameAuthenticationToken extends AbstractAuthenticationToken {
     private String password; // 前端传过来
     private UserLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
 
-    public UsernameAuthenticationToken(String username, String password, Boolean authenticated) {
+    public UsernameAuthenticationToken(String username, String password) {
         this.username = username;
         this.password = password;
         super(List.of());
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(false);
     }
 
-    public UsernameAuthenticationToken(UserLoginInfo currentUser, Boolean authenticated,
+    public UsernameAuthenticationToken(UserLoginInfo currentUser,
                                        Collection<? extends GrantedAuthority> authorities) {
         this.currentUser = currentUser;
         super(authorities);
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(true);
     }
 
     @Override

@@ -16,17 +16,17 @@ public class JwtTokenAuthenticationToken extends AbstractAuthenticationToken {
     private String jwtToken; // 前端传过来
     private UserLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
 
-    public JwtTokenAuthenticationToken(String jwtToken, Boolean authenticated) {
+    public JwtTokenAuthenticationToken(String jwtToken) {
         this.jwtToken = jwtToken;
         super(List.of());
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(false);
     }
 
-    public JwtTokenAuthenticationToken(UserLoginInfo currentUser, Boolean authenticated,
+    public JwtTokenAuthenticationToken(UserLoginInfo currentUser,
                                        Collection<? extends GrantedAuthority> authorities) {
         this.currentUser = currentUser;
         super(authorities);
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(true);
     }
 
     @Override

@@ -1,5 +1,9 @@
 package com.spring.security.authentication.handler.auth.github;
 
+import com.spring.security.authentication.handler.auth.message.SmsAuthenticationToken;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.util.Assert;
 import tools.jackson.databind.json.JsonMapper;
 import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthMeta;
 import com.spring.security.common.web.constant.ResponseCodeConstants;
@@ -26,17 +30,18 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class GitHubAuthenticationProvider implements AuthenticationProvider {
-
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     private final GitHubOAuth2Service githubOAuth2Service;
-
     private final UserRepository userRepository;
-
     private final UserIdentityRepository userIdentityRepository;
-
     private final JsonMapper jsonMapper = new JsonMapper();
 
     @Override
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
+        Assert.isInstanceOf(SmsAuthenticationToken.class, authentication,
+                () -> this.messages.getMessage("GitHubAuthenticationProvider.onlySupports",
+                        "Only GitHubAuthenticationToken is supported"));
+
         GitHubAuthenticationToken gitHubAuthenticationToken = (GitHubAuthenticationToken) authentication;
         String code = gitHubAuthenticationToken.getCode();
         OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
@@ -49,7 +54,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
         Optional<UserIdentity> userIdentityOptional = userIdentityRepository.findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB);
         UserLoginInfo currentUser = userIdentityOptional.isEmpty() ? UserLoginInfo.builder().username(oAuth2User.getAttribute("login")).build() :
                 jsonMapper.convertValue(userRepository.findById(userIdentityOptional.get().getUser().getId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED)), UserLoginInfo.class);
-        GitHubAuthenticationToken token = new GitHubAuthenticationToken(currentUser, true, List.of());
+        GitHubAuthenticationToken token = new GitHubAuthenticationToken(currentUser, List.of());
         token.setDetails(new GitHubOAuthMeta(userIdentityOptional.isEmpty(), providerUserId));
         // 构造认证对象
         log.debug("GitHub认证成功，用户: {}", currentUser.getUsername());

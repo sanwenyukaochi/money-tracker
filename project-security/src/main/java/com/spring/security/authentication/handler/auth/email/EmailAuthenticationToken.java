@@ -17,18 +17,18 @@ public class EmailAuthenticationToken extends AbstractAuthenticationToken {
     private String password;
     private UserLoginInfo currentUser;
 
-    public EmailAuthenticationToken(String email, String password, Boolean authenticated) {
+    public EmailAuthenticationToken(String email, String password) {
         this.email = email;
         this.password = password;
         super(List.of());
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(false);
     }
 
-    public EmailAuthenticationToken(UserLoginInfo currentUser, Boolean authenticated,
+    public EmailAuthenticationToken(UserLoginInfo currentUser,
                                     Collection<? extends GrantedAuthority> authorities) {
         this.currentUser = currentUser;
         super(authorities);
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(true);
     }
 
     @Override

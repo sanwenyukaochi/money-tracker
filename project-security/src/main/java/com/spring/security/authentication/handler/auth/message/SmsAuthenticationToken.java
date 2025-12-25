@@ -17,18 +17,18 @@ public class SmsAuthenticationToken extends AbstractAuthenticationToken {
     private String smsCode;
     private UserLoginInfo currentUser;
 
-    public SmsAuthenticationToken(String phone, String smsCode, Boolean authenticated) {
+    public SmsAuthenticationToken(String phone, String smsCode) {
         this.phone = phone;
         this.smsCode = smsCode;
         super(List.of());
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(false);
     }
 
-    public SmsAuthenticationToken(UserLoginInfo currentUser, Boolean authenticated,
+    public SmsAuthenticationToken(UserLoginInfo currentUser,
                                   Collection<? extends GrantedAuthority> authorities) {
         this.currentUser = currentUser;
         super(authorities);
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(true);
     }
 
     @Override

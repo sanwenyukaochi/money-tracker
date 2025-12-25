@@ -1,10 +1,14 @@
 package com.spring.security.authentication.handler.auth.github;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpMethod;
@@ -24,6 +28,7 @@ public class GitHubAuthenticationFilter extends AbstractAuthenticationProcessing
             .matcher(HttpMethod.POST, "/api/login/oauth/github");
 
     private final JsonMapper jsonMapper = new JsonMapper();
+    private final boolean postOnly = true;
 
     public GitHubAuthenticationFilter(AuthenticationManager authenticationManager,
                                       AuthenticationSuccessHandler authenticationSuccessHandler,
@@ -34,13 +39,21 @@ public class GitHubAuthenticationFilter extends AbstractAuthenticationProcessing
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
+    public Authentication attemptAuthentication(@NonNull HttpServletRequest request,
                                                 @NonNull HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         log.debug("use GithubAuthenticationFilter");
+        if (this.postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
+        GitHubLoginRequest gitHubLoginRequest = jsonMapper.readValue(request.getInputStream(), GitHubLoginRequest.class);
+        String code = obtainCode(gitHubLoginRequest);
+        code = (code != null) ? code.trim() : "";
+        GitHubAuthenticationToken authRequest = new GitHubAuthenticationToken(code);
+        return this.getAuthenticationManager().authenticate(authRequest);
+    }
 
-        GitHubLoginRequest githubLoginRequest = jsonMapper.readValue(request.getInputStream(), GitHubLoginRequest.class);
-
-        GitHubAuthenticationToken authentication = new GitHubAuthenticationToken(githubLoginRequest.code(), false);
-        return getAuthenticationManager().authenticate(authentication);
+    @Nullable
+    protected String obtainCode(GitHubLoginRequest gitHubLoginRequest) throws IOException {
+        return gitHubLoginRequest.code();
     }
 }

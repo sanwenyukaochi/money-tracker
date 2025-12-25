@@ -16,17 +16,17 @@ public class GitHubAuthenticationToken extends AbstractAuthenticationToken {
     private String code;
     private UserLoginInfo currentUser;
 
-    public GitHubAuthenticationToken(String code, Boolean authenticated) {
+    public GitHubAuthenticationToken(String code) {
         this.code = code;
         super(List.of());
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(false);
     }
 
-    public GitHubAuthenticationToken(UserLoginInfo currentUser, Boolean authenticated,
+    public GitHubAuthenticationToken(UserLoginInfo currentUser,
                                      Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.currentUser = currentUser;
-        super.setAuthenticated(authenticated);
+        super.setAuthenticated(true);
     }
 
     @Override

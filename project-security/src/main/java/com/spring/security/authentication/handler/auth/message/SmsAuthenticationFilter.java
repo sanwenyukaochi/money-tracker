@@ -1,5 +1,8 @@
 package com.spring.security.authentication.handler.auth.message;
 
+import com.spring.security.authentication.handler.auth.user.UsernameLoginRequest;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +27,7 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
             .matcher(HttpMethod.POST, "/api/login/application/sms");
 
     private final JsonMapper jsonMapper = new JsonMapper();
-
+    private boolean postOnly = true;
 
     public SmsAuthenticationFilter(AuthenticationManager authenticationManager,
                                    AuthenticationSuccessHandler authenticationSuccessHandler,
@@ -35,16 +38,33 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
+    public Authentication attemptAuthentication(@NonNull HttpServletRequest request,
                                                 @NonNull HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         log.debug("user SmsCodeAuthenticationFilter");
-
+        if (this.postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
         // 提取请求数据
         SmsLoginRequest smsLoginRequest = jsonMapper.readValue(request.getInputStream(), SmsLoginRequest.class);
+        String phone = obtainPhone(smsLoginRequest);
+        phone = (phone != null) ? phone.trim() : "";
+        String captcha = obtainCaptcha(smsLoginRequest);
+        captcha = (captcha != null) ? captcha : "";
 
-        SmsAuthenticationToken authentication = new SmsAuthenticationToken(smsLoginRequest.phone(), smsLoginRequest.captcha(), false);
+        // 封装成Spring Security需要的对象
+        SmsAuthenticationToken authentication = new SmsAuthenticationToken(phone, captcha);
         // 提取参数阶段，authenticated一定是false
         return getAuthenticationManager().authenticate(authentication);
+    }
+
+    @Nullable
+    protected String obtainPhone(SmsLoginRequest smsLoginRequest) {
+        return smsLoginRequest.phone();
+    }
+
+    @Nullable
+    protected String obtainCaptcha(SmsLoginRequest smsLoginRequest) {
+        return smsLoginRequest.captcha();
     }
 
 }

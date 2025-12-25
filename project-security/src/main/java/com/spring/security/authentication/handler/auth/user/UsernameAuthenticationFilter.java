@@ -1,11 +1,12 @@
 package com.spring.security.authentication.handler.auth.user;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpMethod;
@@ -32,6 +33,7 @@ public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessi
             .matcher(HttpMethod.POST, "/api/login/application/username");
 
     private final JsonMapper jsonMapper = new JsonMapper();
+    private boolean postOnly = true;
 
     public UsernameAuthenticationFilter(AuthenticationManager authenticationManager,
                                         AuthenticationSuccessHandler authenticationSuccessHandler,
@@ -42,17 +44,32 @@ public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessi
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
+    public Authentication attemptAuthentication(@NonNull HttpServletRequest request,
                                                 @NonNull HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         log.debug("use UsernameAuthenticationFilter");
-
+        if (this.postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
         // 提取请求数据
         UsernameLoginRequest usernameLoginRequest = jsonMapper.readValue(request.getInputStream(), UsernameLoginRequest.class);
+        String username = obtainUsername(usernameLoginRequest);
+        username = (username != null) ? username.trim() : "";
+        String password = obtainPassword(usernameLoginRequest);
+        password = (password != null) ? password : "";
 
         // 封装成Spring Security需要的对象
-        UsernameAuthenticationToken authentication = new UsernameAuthenticationToken(usernameLoginRequest.username(), usernameLoginRequest.password(), false);
+        UsernameAuthenticationToken authentication = new UsernameAuthenticationToken(username, password);
         // 开始登录认证。SpringSecurity会利用 Authentication对象去寻找 AuthenticationProvider进行登录认证
         return getAuthenticationManager().authenticate(authentication);
     }
 
+    @Nullable
+    protected String obtainPassword(UsernameLoginRequest usernameLoginRequest) {
+        return usernameLoginRequest.password();
+    }
+
+    @Nullable
+    protected String obtainUsername(UsernameLoginRequest usernameLoginRequest) {
+        return usernameLoginRequest.username();
+    }
 }
