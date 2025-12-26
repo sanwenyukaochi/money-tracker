@@ -31,6 +31,10 @@ public record Result<T>(
         return new Result<>(ResponseCodeConstants.ERROR, message, data);
     }
 
+    public static <T> Result<T> error(String code, String message, T data) {
+        return new Result<>(code, message, data);
+    }
+
     public static <T> Result<T> error(T data) {
         return new Result<>(ResponseCodeConstants.ERROR, ResponseCodeConstants.ERROR, data);
     }

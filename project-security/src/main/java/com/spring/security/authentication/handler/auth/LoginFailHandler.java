@@ -34,6 +34,6 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);
-        jsonMapper.writeValue(response.getOutputStream(), Result.success(ResponseCodeConstants.AUTH_LOGIN_FAILED, authenticationException.getMessage(), null));
+        jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_LOGIN_FAILED, authenticationException.getMessage(), null));
     }
 }

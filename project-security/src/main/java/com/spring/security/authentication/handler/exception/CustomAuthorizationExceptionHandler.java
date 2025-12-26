@@ -37,6 +37,6 @@ public class CustomAuthorizationExceptionHandler implements AccessDeniedHandler 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
         log.warn("访问异常：msg={}", accessDeniedException.getMessage(), accessDeniedException);
-        jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_ACCESS_DENIED, "授权失败"));
+        jsonMapper.writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_ACCESS_DENIED, "授权失败", null));
     }
 }

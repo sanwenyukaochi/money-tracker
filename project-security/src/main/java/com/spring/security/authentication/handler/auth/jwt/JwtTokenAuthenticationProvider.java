@@ -63,7 +63,7 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     protected UserLoginInfo retrieveUser(String jwtToken, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = jwtService.validateJwtToken(jwtToken);
         UserLoginInfo loadedUser = userCache.getUserLoginInfo(jwtTokenUserLoginInfo.username());
-        log.error("用户信息查询{}，用户: {}", loadedUser != null ? "成功" : "失败", jwtTokenUserLoginInfo.username());
+        log.debug("用户信息查询{}，用户: {}", loadedUser != null ? "成功" : "失败", jwtTokenUserLoginInfo.username());
         return loadedUser;
     }
 
