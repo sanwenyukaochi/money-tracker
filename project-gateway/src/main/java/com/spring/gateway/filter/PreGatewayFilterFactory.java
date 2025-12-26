@@ -6,7 +6,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 @Slf4j
 @Component
@@ -19,7 +18,7 @@ public class PreGatewayFilterFactory
 
     @Override
     @NonNull
-    public GatewayFilter apply(Config config) {
+    public GatewayFilter apply(@NonNull Config config) {
         // grab configuration from Config object
         return (exchange, chain) -> {
             //If you want to build a "pre" filter you need to manipulate the

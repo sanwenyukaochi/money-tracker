@@ -19,7 +19,7 @@ public class PostGatewayFilterFactory
 
     @Override
     @NonNull
-    public GatewayFilter apply(Config config) {
+    public GatewayFilter apply(@NonNull Config config) {
         // grab configuration from Config object
         return (exchange, chain) -> {
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
