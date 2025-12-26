@@ -54,8 +54,9 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          UserLoginInfo userLoginInfo) {
-        JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());
+        JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());        // 必须转化成Map
         // 认证通过，这里一定要设成true
+        authentication.setAuthenticated(true);
         log.debug("JWT认证成功，用户: {}", userLoginInfo.getUsername());
         return result;
     }
@@ -63,13 +64,14 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     protected UserLoginInfo retrieveUser(String jwtToken, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = jwtService.validateJwtToken(jwtToken);
         UserLoginInfo loadedUser = userCache.getUserLoginInfo(jwtTokenUserLoginInfo.username());
+        authentication.setDetails(null);
         log.debug("用户信息查询{}，用户: {}", loadedUser != null ? "成功" : "失败", jwtTokenUserLoginInfo.username());
         return loadedUser;
     }
 
     protected void additionalAuthenticationChecks(UserLoginInfo userLoginInfo, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         String presentedJwtToken = authentication.getJwtToken();
-        if (userLoginInfo == null) {
+        if (presentedJwtToken == null || userLoginInfo == null) {
             log.debug("身份验证失败，因为身份与Redis存储的值不匹配");
             throw new BadCredentialsException(this.messages
                     .getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证"));

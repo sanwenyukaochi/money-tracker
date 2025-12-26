@@ -61,12 +61,14 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         UsernameAuthenticationToken result = new UsernameAuthenticationToken(userLoginInfo, List.of());
         // 认证通过，这里一定要设成true
+        authentication.setAuthenticated(true);
         log.debug("用户名认证成功，用户: {}", userLoginInfo.getUsername());
         return result;
     }
 
     protected User retrieveUser(String username, UsernameAuthenticationToken authentication) throws AuthenticationException {
         User loadedUser = userRepository.findByUsername(username).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
+        authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;
     }

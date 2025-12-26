@@ -59,12 +59,14 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         SmsAuthenticationToken result = new SmsAuthenticationToken(userLoginInfo, List.of());
         // 认证通过，这里一定要设成true
+        authentication.setAuthenticated(true);
         log.debug("手机号认证成功，用户: {}", userLoginInfo.getUsername());
         return result;
     }
 
     protected User retrieveUser(String phone, SmsAuthenticationToken authentication) throws AuthenticationException {
         User loadedUser = userRepository.findByPhone(phone).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_PHONE_NOT_FOUND, "手机号不存在", HttpStatus.NOT_FOUND));
+        authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;
     }
@@ -72,7 +74,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     protected void additionalAuthenticationChecks(User user,
                                                   SmsAuthenticationToken authentication) throws AuthenticationException {
         String presentedSmsCode = authentication.getSmsCode();
-        if (!presentedSmsCode.equals("000000")) {
+        if (!presentedSmsCode.equals("000000") || user == null) {
             log.debug("身份验证失败，因为验证码与存储的值不匹配");
             throw new BadCredentialsException(this.messages
                     .getMessage("smsAuthenticationProvider.badCredentials", "错误的凭证"));

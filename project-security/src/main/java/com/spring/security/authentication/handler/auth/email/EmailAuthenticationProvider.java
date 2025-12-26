@@ -61,12 +61,14 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         EmailAuthenticationToken result = new EmailAuthenticationToken(userLoginInfo, List.of());
         // 认证通过，这里一定要设成true
+        authentication.setAuthenticated(true);
         log.debug("邮箱认证成功，用户: {}", userLoginInfo.getUsername());
         return result;
     }
 
     protected User retrieveUser(String email, EmailAuthenticationToken authentication) throws AuthenticationException {
         User loadedUser = userRepository.findByEmail(email).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_EMAIL_NOT_FOUND, "邮箱不存在", HttpStatus.NOT_FOUND));
+        authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;
     }
