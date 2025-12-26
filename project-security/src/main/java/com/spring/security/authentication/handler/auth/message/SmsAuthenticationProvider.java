@@ -37,7 +37,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(SmsAuthenticationToken.class, authentication,
                 () -> this.messages.getMessage("SmsAuthenticationProvider.onlySupports",
-                        "Only SmsAuthenticationToken is supported"));
+                        "仅支持手机号验证码身份验证提供程序"));
         SmsAuthenticationToken smsAuthenticationToken = (SmsAuthenticationToken) authentication;
         // 获取用户提交的手机号
         String phone = (smsAuthenticationToken.getPhone() == null ? "NONE_PROVIDED" : smsAuthenticationToken.getPhone());
@@ -74,9 +74,9 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
                                                   SmsAuthenticationToken authentication) throws AuthenticationException {
         String presentedSmsCode = authentication.getSmsCode();
         if (!presentedSmsCode.equals("000000")) {
-            log.debug("Failed to authenticate since sms code does not match stored value");
+            log.debug("身份验证失败，因为验证码与存储的值不匹配");
             throw new BadCredentialsException(this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+                    .getMessage("smsAuthenticationProvider.badCredentials", "错误的凭证"));
         }
     }
 }

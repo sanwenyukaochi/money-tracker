@@ -39,7 +39,7 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(UsernameAuthenticationToken.class, authentication,
                 () -> this.messages.getMessage("UsernameAuthenticationProvider.onlySupports",
-                        "Only UsernameAuthenticationToken is supported"));
+                        "仅支持用户名身份验证提供程序"));
         UsernameAuthenticationToken usernameAuthenticationToken = (UsernameAuthenticationToken) authentication;
         // 获取用户提交的用户名
         String username = (usernameAuthenticationToken.getUsername() == null ? "NONE_PROVIDED" : usernameAuthenticationToken.getUsername());
@@ -76,9 +76,9 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
                                                   UsernameAuthenticationToken authentication) throws AuthenticationException {
         String presentedPassword = authentication.getPassword();
         if (!this.passwordEncoder.matches(presentedPassword, user.getPassword())) {
-            log.debug("Failed to authenticate since password does not match stored value");
+            log.debug("身份验证失败，因为密码与存储的值不匹配");
             throw new BadCredentialsException(this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+                    .getMessage("usernameAuthenticationProvider.badCredentials", "错误的凭证"));
         }
     }
 }

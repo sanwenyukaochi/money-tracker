@@ -39,7 +39,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(EmailAuthenticationToken.class, authentication,
                 () -> this.messages.getMessage("EmailAuthenticationProvider.onlySupports",
-                        "Only EmailAuthenticationToken is supported"));
+                        "仅支持邮箱身份验证提供程序"));
         EmailAuthenticationToken emailAuthenticationToken = (EmailAuthenticationToken) authentication;
         // 获取用户提交的邮箱
         String email = (emailAuthenticationToken.getEmail() == null ? "NONE_PROVIDED" : emailAuthenticationToken.getEmail());
@@ -76,9 +76,9 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
                                                   EmailAuthenticationToken authentication) throws AuthenticationException {
         String presentedPassword = authentication.getPassword();
         if (!this.passwordEncoder.matches(presentedPassword, user.getPassword())) {
-            log.debug("Failed to authenticate since password does not match stored value");
+            log.debug("身份验证失败，因为验证码与存储的值不匹配");
             throw new BadCredentialsException(this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+                    .getMessage("emailAuthenticationProvider.badCredentials", "错误的凭证"));
         }
     }
 }
