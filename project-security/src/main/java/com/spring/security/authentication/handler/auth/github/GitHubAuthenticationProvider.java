@@ -31,7 +31,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GitHubAuthenticationProvider implements AuthenticationProvider {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    private final JsonMapper jsonMapper = new JsonMapper();
     private final UserIdentityRepository userIdentityRepository;
     private final GitHubOAuth2Service githubOAuth2Service;
     private final UserRepository userRepository;
@@ -53,7 +52,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
 
         Optional<UserIdentity> userIdentityOptional = userIdentityRepository.findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB);
         UserLoginInfo currentUser = userIdentityOptional.isEmpty() ? UserLoginInfo.builder().username(oAuth2User.getAttribute("login")).build() :
-                jsonMapper.convertValue(userRepository.findById(userIdentityOptional.get().getUser().getId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED)), UserLoginInfo.class);
+                JsonMapper.shared().convertValue(userRepository.findById(userIdentityOptional.get().getUser().getId()).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.UNAUTHORIZED)), UserLoginInfo.class);
         GitHubAuthenticationToken token = new GitHubAuthenticationToken(currentUser, List.of());
         token.setDetails(new GitHubOAuthMeta(userIdentityOptional.isEmpty(), providerUserId));
         // 构造认证对象

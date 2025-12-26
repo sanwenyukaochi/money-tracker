@@ -27,7 +27,6 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/api/login/application/sms");
 
-    private final JsonMapper jsonMapper = new JsonMapper();
     private boolean postOnly = true;
 
     public SmsAuthenticationFilter(AuthenticationManager authenticationManager,
@@ -46,7 +45,7 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         // 提取请求数据
-        SmsLoginRequest smsLoginRequest = jsonMapper.readValue(request.getInputStream(), SmsLoginRequest.class);
+        SmsLoginRequest smsLoginRequest = JsonMapper.shared().readValue(request.getInputStream(), SmsLoginRequest.class);
         String phone = obtainPhone(smsLoginRequest);
         phone = (phone != null) ? phone.trim() : "";
         String captcha = obtainCaptcha(smsLoginRequest);

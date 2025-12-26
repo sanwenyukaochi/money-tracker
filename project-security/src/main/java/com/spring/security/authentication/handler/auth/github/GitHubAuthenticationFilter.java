@@ -1,8 +1,8 @@
 package com.spring.security.authentication.handler.auth.github;
 
+import lombok.Setter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,15 +20,16 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import tools.jackson.databind.json.JsonMapper;
 
 @Slf4j
+@Setter
 public class GitHubAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/api/login/oauth/github");
 
-    private final JsonMapper jsonMapper = new JsonMapper();
-    private final boolean postOnly = true;
+    private boolean postOnly = true;
 
     public GitHubAuthenticationFilter(AuthenticationManager authenticationManager,
                                       AuthenticationSuccessHandler authenticationSuccessHandler,
@@ -45,7 +46,7 @@ public class GitHubAuthenticationFilter extends AbstractAuthenticationProcessing
         if (this.postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
-        GitHubLoginRequest gitHubLoginRequest = jsonMapper.readValue(request.getInputStream(), GitHubLoginRequest.class);
+        GitHubLoginRequest gitHubLoginRequest = JsonMapper.shared().readValue(request.getInputStream(), GitHubLoginRequest.class);
         String code = obtainCode(gitHubLoginRequest);
         code = (code != null) ? code.trim() : "";
         GitHubAuthenticationToken authRequest = new GitHubAuthenticationToken(code);

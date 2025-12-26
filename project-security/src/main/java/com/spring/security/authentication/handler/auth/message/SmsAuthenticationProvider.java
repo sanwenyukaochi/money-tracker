@@ -30,7 +30,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SmsAuthenticationProvider implements AuthenticationProvider {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    private final JsonMapper jsonMapper = new JsonMapper();
     private final UserRepository userRepository;
 
     @Override
@@ -56,7 +55,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
-        UserLoginInfo userLoginInfo = jsonMapper.convertValue(user, UserLoginInfo.class);
+        UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         SmsAuthenticationToken result = new SmsAuthenticationToken(userLoginInfo, List.of());
         // 认证通过，这里一定要设成true

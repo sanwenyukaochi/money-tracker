@@ -26,9 +26,9 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     private final JwtService jwtService;
     private final UserCache userCache;
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
     @Override
     @SneakyThrows

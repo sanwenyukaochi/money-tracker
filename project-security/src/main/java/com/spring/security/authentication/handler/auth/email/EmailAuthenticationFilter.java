@@ -27,7 +27,6 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/api/login/application/email");
 
-    private final JsonMapper jsonMapper = new JsonMapper();
     private boolean postOnly = true;
 
     public EmailAuthenticationFilter(AuthenticationManager authenticationManager,
@@ -46,7 +45,7 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         // 提取请求数据
-        EmailLoginRequest emailLoginRequest = jsonMapper.readValue(request.getInputStream(), EmailLoginRequest.class);
+        EmailLoginRequest emailLoginRequest = JsonMapper.shared().readValue(request.getInputStream(), EmailLoginRequest.class);
         String email = obtainEmail(emailLoginRequest);
         email = (email != null) ? email.trim() : "";
         String password = obtainPassword(emailLoginRequest);

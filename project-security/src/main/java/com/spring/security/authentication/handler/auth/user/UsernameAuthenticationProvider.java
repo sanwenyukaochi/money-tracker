@@ -31,7 +31,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UsernameAuthenticationProvider implements AuthenticationProvider {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    private final JsonMapper jsonMapper = new JsonMapper();
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -58,7 +57,7 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
-        UserLoginInfo userLoginInfo = jsonMapper.convertValue(user, UserLoginInfo.class);
+        UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         UsernameAuthenticationToken result = new UsernameAuthenticationToken(userLoginInfo, List.of());
         // 认证通过，这里一定要设成true

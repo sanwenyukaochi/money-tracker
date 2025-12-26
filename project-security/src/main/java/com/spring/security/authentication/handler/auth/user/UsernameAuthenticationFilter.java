@@ -34,7 +34,6 @@ public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessi
     private static final RequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = PathPatternRequestMatcher.withDefaults()
             .matcher(HttpMethod.POST, "/api/login/application/username");
 
-    private final JsonMapper jsonMapper = new JsonMapper();
     private boolean postOnly = true;
 
     public UsernameAuthenticationFilter(AuthenticationManager authenticationManager,
@@ -53,7 +52,7 @@ public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessi
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         // 提取请求数据
-        UsernameLoginRequest usernameLoginRequest = jsonMapper.readValue(request.getInputStream(), UsernameLoginRequest.class);
+        UsernameLoginRequest usernameLoginRequest = JsonMapper.shared().readValue(request.getInputStream(), UsernameLoginRequest.class);
         String username = obtainUsername(usernameLoginRequest);
         username = (username != null) ? username.trim() : "";
         String password = obtainPassword(usernameLoginRequest);
