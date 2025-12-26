@@ -37,6 +37,7 @@ dependencies {
     runtimeOnly "org.postgresql:postgresql"
     implementation "com.warrenstrange:googleauth"
     implementation "org.jspecify:jspecify"
+    implementation "org.springframework.boot:spring-boot-starter-jooq"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 

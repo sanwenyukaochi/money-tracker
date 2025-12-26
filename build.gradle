@@ -30,6 +30,7 @@ ext {
     set('lombokVersion', "1.18.42")
     set('cosidVersion', "3.0.1")
     set('redissonVersion', "4.0.0")
+    set('jooqVersion', "3.20.10")
 }
 
 subprojects {
@@ -57,6 +58,7 @@ subprojects {
         implementation "cn.hutool:hutool-core:${hutoolVersion}"
         implementation "com.warrenstrange:googleauth:${googleauthVersion}"
         implementation "org.jspecify:jspecify:${jspecifyVersion}"
+        implementation "org.jooq:jooq:${jooqVersion}"
 
         implementation "me.ahoo.cosid:cosid-spring-boot-starter:${cosidVersion}"
         implementation "me.ahoo.cosid:cosid-spring-redis:${cosidVersion}"
