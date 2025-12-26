@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -60,6 +61,8 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
         UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         EmailAuthenticationToken result = new EmailAuthenticationToken(userLoginInfo, List.of());
+        // 必须转化成Map
+        result.setDetails(JsonMapper.shared().convertValue(authentication.getDetails(), Map.class));
         // 认证通过，这里一定要设成true
         authentication.setAuthenticated(true);
         log.debug("邮箱认证成功，用户: {}", userLoginInfo.getUsername());

@@ -16,8 +16,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * JWT认证提供者
@@ -54,7 +56,9 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          UserLoginInfo userLoginInfo) {
-        JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());        // 必须转化成Map
+        JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());
+        // 必须转化成Map
+        result.setDetails(JsonMapper.shared().convertValue(authentication.getDetails(), Map.class));
         // 认证通过，这里一定要设成true
         authentication.setAuthenticated(true);
         log.debug("JWT认证成功，用户: {}", userLoginInfo.getUsername());
