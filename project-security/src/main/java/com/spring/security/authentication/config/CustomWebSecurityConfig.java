@@ -173,7 +173,7 @@ public class CustomWebSecurityConfig {
 
         // 创建JWT认证过滤器，使用AuthenticationManager
         JwtTokenAuthenticationFilter jwtFilter = new JwtTokenAuthenticationFilter(applicationContext.getBean(JwtService.class), new ProviderManager(List.of(applicationContext.getBean(JwtTokenAuthenticationProvider.class))));
-
+        jwtFilter.setPostOnly(false);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

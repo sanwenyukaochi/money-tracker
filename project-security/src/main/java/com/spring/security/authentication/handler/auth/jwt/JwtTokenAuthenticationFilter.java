@@ -4,11 +4,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import com.spring.security.authentication.handler.auth.jwt.service.JwtService;
+import org.jspecify.annotations.Nullable;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,25 +34,25 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * - 异常处理交给Spring Security的异常处理机制
  */
 @Slf4j
+@Setter
+@RequiredArgsConstructor
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-
-    public JwtTokenAuthenticationFilter(JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
+    private boolean postOnly = true;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        log.debug("开始JWT认证过滤器处理");
-
-        // 1. 从请求中提取JWT令牌
+        log.debug("use JwtTokenAuthenticationFilter");
+        if (this.postOnly && !request.getMethod().equals(HttpMethod.POST.name())) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
+        // 提取请求数据
         String jwtToken = jwtService.getJwtFromHeader(request);
-
-        // 2. 如果没有JWT令牌，直接放行（可能是公开接口或其他认证方式）
+        jwtToken = obtainJwtToken(jwtToken);
+        // 如果没有JWT令牌，直接放行(可能是公开接口或其他认证方式)
         if (!StringUtils.hasText(jwtToken)) {
             log.debug("未找到JWT令牌，跳过JWT认证");
             filterChain.doFilter(request, response);
@@ -55,18 +60,18 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            // 3. 创建未认证的Authentication对象
+            // 创建未认证的Authentication对象
             JwtTokenAuthenticationToken unauthenticatedToken = new JwtTokenAuthenticationToken(jwtToken);
 
-            // 4. 委托给AuthenticationManager进行认证
+            // 委托给AuthenticationManager进行认证
             Authentication authenticatedToken = authenticationManager.authenticate(unauthenticatedToken);
 
-            // 5. 认证成功，将结果设置到SecurityContext中
+            // 认证成功，将结果设置到SecurityContext中
             SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
             log.debug("JWT认证成功，用户已设置到SecurityContext");
 
         } catch (AuthenticationException e) {
-            // 6. 认证失败，清空SecurityContext
+            // 认证失败，清空SecurityContext
             SecurityContextHolder.clearContext();
             log.debug("JWT认证失败: {}", e.getMessage());
             // 注意：这里不直接抛出异常，而是让Spring Security的异常处理机制处理
@@ -74,7 +79,12 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             throw e;
         }
 
-        // 7. 继续过滤器链
+        // 继续过滤器链
         filterChain.doFilter(request, response);
+    }
+
+    @Nullable
+    protected String obtainJwtToken(String jwtToken) {
+        return jwtToken;
     }
 }
