@@ -1,5 +1,6 @@
 package com.spring.security.authentication.handler.auth.github;
 
+import com.spring.security.domain.model.entity.User;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.SpringSecurityMessageSource;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * GITHUB认证提供者
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -43,11 +47,11 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
         // 获取用户提交的手机号
         String code = (gitHubAuthenticationToken.getCode() == null ? "NONE_PROVIDED" : gitHubAuthenticationToken.getCode());
         // 查询用户信息
-        UserLoginInfo userLoginInfo = retrieveUser(code, gitHubAuthenticationToken);
+        User user = retrieveUser(code, gitHubAuthenticationToken);
         // 验证用户信息
-        additionalAuthenticationChecks(userLoginInfo, (GitHubAuthenticationToken) authentication);
+        additionalAuthenticationChecks(user, (GitHubAuthenticationToken) authentication);
         // 构造成功结果
-        return createSuccessAuthentication(gitHubAuthenticationToken, userLoginInfo);
+        return createSuccessAuthentication(gitHubAuthenticationToken, user);
     }
 
     @Override
@@ -56,7 +60,8 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
     }
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
-                                                         UserLoginInfo userLoginInfo) {
+                                                         User user) {
+        UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
         // 认证通过，使用 Authenticated 为 true 的构造函数
         GitHubAuthenticationToken result = new GitHubAuthenticationToken(userLoginInfo, List.of());
@@ -66,30 +71,34 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
         return result;
     }
 
-    protected UserLoginInfo retrieveUser(String code, GitHubAuthenticationToken authentication) throws AuthenticationException {
+    protected User retrieveUser(String code, GitHubAuthenticationToken authentication) throws AuthenticationException {
         OAuth2User oAuth2User = githubOAuth2Service.authenticateByCode(code);
         Long providerUserId = Optional.ofNullable(oAuth2User.getAttribute("id"))
                 .filter(Number.class::isInstance)
                 .map(Number.class::cast)
                 .map(Number::longValue)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
-        UserLoginInfo loadedUser = userIdentityRepository
+        User loadedUser = userIdentityRepository
                 .findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB)
                 .flatMap(identity -> userRepository.findById(identity.getUser().getId()))
-                .map(user -> JsonMapper.shared().convertValue(user, UserLoginInfo.class))
-                .orElseGet(() -> UserLoginInfo.builder().username(oAuth2User.getAttribute("login")).build());
+                .map(user -> JsonMapper.shared().convertValue(user, User.class))
+                .orElseGet(() -> {
+                    User user = new User();
+                    user.setUsername(oAuth2User.getAttribute("login"));
+                    return user;
+                });
         boolean isNewUser = loadedUser.getId() == null;
         authentication.setDetails(new GitHubOAuthMeta(isNewUser, providerUserId));
         log.debug("用户信息查询{}，用户: {}", !isNewUser ? "成功" : "失败", loadedUser.getUsername());
         return loadedUser;
     }
 
-    protected void additionalAuthenticationChecks(UserLoginInfo userLoginInfo, GitHubAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(User user, GitHubAuthenticationToken authentication) throws AuthenticationException {
         String presentedCode = authentication.getCode();
-        if (presentedCode == null || userLoginInfo == null) {
+        if (presentedCode == null || user == null) {
             log.debug("身份验证失败，因为身份与数据库存储的值不匹配");
             throw new BadCredentialsException(this.messages
-            .getMessage("gitHubAuthenticationProvider.sessionExpired", "错误的凭证"));
+                    .getMessage("gitHubAuthenticationProvider.sessionExpired", "错误的凭证"));
         }
     }
 }

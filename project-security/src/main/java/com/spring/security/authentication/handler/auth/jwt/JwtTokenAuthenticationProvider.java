@@ -4,6 +4,7 @@ import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.dto.JwtTokenUserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.service.JwtService;
 import com.spring.security.common.cache.UserCache;
+import com.spring.security.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +43,11 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
         // 获取用户提交的JWT
         String jwtToken = (jwtTokenAuthenticationToken.getJwtToken() == null ? "NONE_PROVIDED" : jwtTokenAuthenticationToken.getJwtToken());
         // 查询用户信息
-        UserLoginInfo userLoginInfo = retrieveUser(jwtToken, jwtTokenAuthenticationToken);
+        User user = retrieveUser(jwtToken, jwtTokenAuthenticationToken);
         // 验证用户信息
-        additionalAuthenticationChecks(userLoginInfo, (JwtTokenAuthenticationToken) authentication);
+        additionalAuthenticationChecks(user, (JwtTokenAuthenticationToken) authentication);
         // 构造成功结果
-        return createSuccessAuthentication(jwtTokenAuthenticationToken, userLoginInfo);
+        return createSuccessAuthentication(jwtTokenAuthenticationToken, user);
     }
 
     @Override
@@ -55,7 +56,8 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     }
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
-                                                         UserLoginInfo userLoginInfo) {
+                                                         User user) {
+        UserLoginInfo userLoginInfo = userCache.getUserLoginInfo(user.getUsername());
         // 认证通过，使用 Authenticated 为 true 的构造函数
         JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());
         // 必须转化成Map
@@ -64,18 +66,19 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
         return result;
     }
 
-    protected UserLoginInfo retrieveUser(String jwtToken, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
+    protected User retrieveUser(String jwtToken, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = jwtService.validateJwtToken(jwtToken);
-        UserLoginInfo loadedUser = userCache.getUserLoginInfo(jwtTokenUserLoginInfo.username());
+        User loadedUser = new User();
+        loadedUser.setUsername(jwtTokenUserLoginInfo.username());
         authentication.setDetails(null);
-        log.debug("用户信息查询{}，用户: {}", loadedUser != null ? "成功" : "失败", jwtTokenUserLoginInfo.username());
+        log.debug("用户信息解析成功，用户: {}", jwtTokenUserLoginInfo.username());
         return loadedUser;
     }
 
-    protected void additionalAuthenticationChecks(UserLoginInfo userLoginInfo, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(User user, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         String presentedJwtToken = authentication.getJwtToken();
-        if (presentedJwtToken == null || userLoginInfo == null) {
-            log.debug("身份验证失败，因为身份与Redis存储的值不匹配");
+        if (presentedJwtToken == null || user == null) {
+            log.debug("身份验证失败，因为身份与存储的值不匹配");
             throw new BadCredentialsException(this.messages
                     .getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证"));
         }
