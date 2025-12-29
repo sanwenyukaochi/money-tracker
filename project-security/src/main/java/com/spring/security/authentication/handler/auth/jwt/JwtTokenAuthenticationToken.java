@@ -5,6 +5,7 @@ import lombok.Setter;
 import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +40,18 @@ public class JwtTokenAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         // 根据SpringSecurity的设计，授权成功之前，getPrincipal返回的客户端传过来的数据。授权成功后，返回当前登陆用户的信息
         return isAuthenticated() ? currentUser : jwtToken;
+    }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+        Assert.isTrue(!isAuthenticated, "无法将此令牌设置为受信任令牌 - 请改用接受 GrantedAuthority 列表的构造函数。");
+        super.setAuthenticated(false);
+    }
+
+    @Override
+    public void eraseCredentials() {
+        super.eraseCredentials();
+        this.jwtToken = null;
     }
 
 }

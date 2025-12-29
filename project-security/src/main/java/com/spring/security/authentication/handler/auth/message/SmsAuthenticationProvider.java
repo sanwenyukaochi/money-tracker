@@ -58,11 +58,10 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
                                                          User user) {
         UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
         userLoginInfo.setSessionId(UUID.randomUUID().toString());
+        // 认证通过，使用 Authenticated 为 true 的构造函数
         SmsAuthenticationToken result = new SmsAuthenticationToken(userLoginInfo, List.of());
         // 必须转化成Map
         result.setDetails(JsonMapper.shared().convertValue(authentication.getDetails(), Map.class));
-        // 认证通过，这里一定要设成true
-        authentication.setAuthenticated(true);
         log.debug("手机号认证成功，用户: {}", userLoginInfo.getUsername());
         return result;
     }

@@ -5,6 +5,7 @@ import lombok.Setter;
 import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,4 +39,17 @@ public class GitHubAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return isAuthenticated() ? currentUser : code;
     }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+        Assert.isTrue(!isAuthenticated, "无法将此令牌设置为受信任令牌 - 请改用接受 GrantedAuthority 列表的构造函数。");
+        super.setAuthenticated(false);
+    }
+
+    @Override
+    public void eraseCredentials() {
+        super.eraseCredentials();
+        this.code = null;
+    }
+
 }
