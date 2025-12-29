@@ -61,8 +61,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
-        UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
-        userLoginInfo.setSessionId(UUID.randomUUID().toString());
+        UserLoginInfo userLoginInfo = new UserLoginInfo(UUID.randomUUID().toString(), user.getId(), user.getUsername(), user.getPassword(), user.getPhone(), user.getEmail(), user.getAccountNonLocked(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getTwoFactorSecret(), user.getTwoFactorEnabled());
         // 认证通过，使用 Authenticated 为 true 的构造函数
         GitHubAuthenticationToken result = new GitHubAuthenticationToken(userLoginInfo, List.of());
         // 必须转化成Map
@@ -81,7 +80,6 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
         User loadedUser = userIdentityRepository
                 .findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB)
                 .flatMap(identity -> userRepository.findById(identity.getUser().getId()))
-                .map(user -> JsonMapper.shared().convertValue(user, User.class))
                 .orElseGet(() -> {
                     User user = new User();
                     user.setUsername(oAuth2User.getAttribute("login"));

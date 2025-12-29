@@ -58,8 +58,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
-        UserLoginInfo userLoginInfo = JsonMapper.shared().convertValue(user, UserLoginInfo.class);
-        userLoginInfo.setSessionId(UUID.randomUUID().toString());
+        UserLoginInfo userLoginInfo = new UserLoginInfo(UUID.randomUUID().toString(), user.getId(), user.getUsername(), user.getPassword(), user.getPhone(), user.getEmail(), user.getAccountNonLocked(), user.getAccountNonLocked(), user.getCredentialsNonExpired(), user.getEnabled(), user.getTwoFactorSecret(), user.getTwoFactorEnabled());
         // 认证通过，使用 Authenticated 为 true 的构造函数
         EmailAuthenticationToken result = new EmailAuthenticationToken(userLoginInfo, List.of());
         // 必须转化成Map
