@@ -1,12 +1,12 @@
 package com.spring.security.authentication.handler.auth.github;
 
+import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthMeta;
 import com.spring.security.domain.model.entity.User;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthMeta;
 import com.spring.security.common.web.constant.ResponseCodeConstants;
 import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.repository.UserIdentityRepository;
@@ -78,7 +78,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
                 .map(Number::longValue)
                 .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
         User loadedUser = userIdentityRepository
-                .findOptionalByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB)
+                .findByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB)
                 .flatMap(identity -> userRepository.findById(identity.getUser().getId()))
                 .orElseGet(() -> {
                     User user = new User();

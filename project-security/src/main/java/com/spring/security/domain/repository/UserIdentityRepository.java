@@ -13,5 +13,5 @@ public interface UserIdentityRepository extends JpaRepository<@NonNull UserIdent
 
     List<UserIdentity> findByProviderUserId(Long providerUserId);
 
-    Optional<UserIdentity> findOptionalByProviderUserIdAndProvider(Long id, UserIdentity.AuthProvider authProvider);
+    Optional<UserIdentity> findByProviderUserIdAndProvider(Long id, UserIdentity.AuthProvider authProvider);
 }

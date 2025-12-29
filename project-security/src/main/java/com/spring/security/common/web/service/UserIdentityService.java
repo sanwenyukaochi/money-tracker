@@ -16,7 +16,7 @@ public class UserIdentityService {
 
     private final UserIdentityRepository userIdentityRepository;
 
-    public UserIdentity getUserIdentityByProviderUserId(Long providerUserId, UserIdentity.AuthProvider provider) {
-        return userIdentityRepository.findOptionalByProviderUserIdAndProvider(providerUserId, provider).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
+    public UserIdentity getUserIdentityByProviderUserIdAndProvider(Long providerUserId, UserIdentity.AuthProvider provider) {
+        return userIdentityRepository.findByProviderUserIdAndProvider(providerUserId, provider).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
     }
 }
