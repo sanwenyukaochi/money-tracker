@@ -20,7 +20,7 @@ public class UserController {
     public Result<UserLoginInfo> getUserInfo(Authentication authentication) {
         UserLoginInfo userLoginInfo = (UserLoginInfo) authentication.getPrincipal();
         log.info("用户登录信息：{}", JsonMapper.shared().writeValueAsString(userLoginInfo));
-        return Result.success("用户信息获取成功", userLoginInfo);
+        return Result.success(userLoginInfo);
     }
 
 }

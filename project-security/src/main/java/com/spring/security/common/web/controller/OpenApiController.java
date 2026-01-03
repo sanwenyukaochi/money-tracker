@@ -19,7 +19,7 @@ public class OpenApiController {
     public Result<OpenApiLoginInfo> getOpenApiApplicationInfo(Authentication authentication) {
         OpenApiLoginInfo userLoginInfo = (OpenApiLoginInfo) authentication.getPrincipal();
         log.info("三方API登录信息：{}", userLoginInfo);
-        return Result.success("SUCCESS B", userLoginInfo);
+        return Result.success(userLoginInfo);
     }
 
 }

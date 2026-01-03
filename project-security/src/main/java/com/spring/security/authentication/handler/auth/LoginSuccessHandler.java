@@ -71,7 +71,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.OK.value());
-        JsonMapper.shared().writeValue(response.getOutputStream(), Result.success("登录成功", loginResponse));
+        JsonMapper.shared().writeValue(response.getOutputStream(), Result.success(loginResponse));
     }
 
 }

@@ -21,6 +21,6 @@ public class GitHubLoginConfigController {
     public Result<GitHubOAuthConfigResponse> config() {
         ClientRegistration registration = registrationRepository.findByRegistrationId("github");
         GitHubOAuthConfigResponse data = new GitHubOAuthConfigResponse(registration.getClientId(), registration.getRedirectUri());
-        return Result.success(ResponseCodeConstants.SUCCESS, data);
+        return Result.success(data);
     }
 }

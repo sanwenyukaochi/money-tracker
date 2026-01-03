@@ -18,8 +18,8 @@ public record Result<T>(
         return new Result<>(ResponseCodeConstants.SUCCESS, message, null);
     }
 
-    public static <T> Result<T> success(String message, T data) {
-        return new Result<>(ResponseCodeConstants.SUCCESS, message, data);
+    public static <T> Result<T> success(T data) {
+        return new Result<>(ResponseCodeConstants.SUCCESS, "操作成功", data);
     }
 
     @Deprecated(forRemoval = true)

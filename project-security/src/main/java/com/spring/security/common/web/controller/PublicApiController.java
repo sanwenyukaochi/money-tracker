@@ -22,7 +22,7 @@ public class PublicApiController {
     @GetMapping
     public Result<Map<String, String>> encode() {
         String encode = passwordEncoder.encode("admin");
-        return Result.success("执行成功", Map.of(
+        return Result.success(Map.of(
                 "passwordEncoder", Optional.ofNullable(encode).orElseThrow(IllegalArgumentException::new)
         ));
     }
