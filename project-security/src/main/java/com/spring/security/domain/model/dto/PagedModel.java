@@ -1,12 +1,14 @@
 package com.spring.security.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 
 import java.util.List;
 
+@JsonPropertyOrder({"content", "page"})
 public record PagedModel<T>(Page<@NonNull T> page) {
 
     public PagedModel(Page<@NonNull T> page) {
@@ -14,24 +16,27 @@ public record PagedModel<T>(Page<@NonNull T> page) {
         this.page = page;
     }
 
-    @JsonProperty
+    @JsonProperty("content")
     public List<T> getContent() {
         return page.getContent();
     }
 
     @JsonProperty("page")
     public PageMetadata getMetadata() {
-        return new PageMetadata(page.getSize(), page.getNumber() + 1, page.getTotalElements(),
-                page.getTotalPages());
+        return new PageMetadata(page.getSize(), page.getNumber() + 1, page.getTotalElements(), page.getTotalPages(),
+                !page.isFirst(), !page.isLast());
     }
 
-    public record PageMetadata(long size, long number, long totalElements, long totalPages) {
+    public record PageMetadata(long size, long number, long totalElements, long totalPages,
+                               boolean hasPrevious, boolean hasNext) {
 
         public PageMetadata {
             Assert.isTrue(size > -1, "Size must not be negative!");
             Assert.isTrue(number > -1, "Number must not be negative!");
             Assert.isTrue(totalElements > -1, "Total elements must not be negative!");
             Assert.isTrue(totalPages > -1, "Total pages must not be negative!");
+            Assert.notNull(hasNext, "hasNext must not be null");
+            Assert.notNull(hasPrevious, "hasPrevious must not be null");
         }
     }
 
