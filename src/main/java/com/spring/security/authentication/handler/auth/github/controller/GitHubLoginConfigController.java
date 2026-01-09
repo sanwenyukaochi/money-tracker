@@ -1,7 +1,6 @@
 package com.spring.security.authentication.handler.auth.github.controller;
 
 import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthConfigResponse;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import com.spring.security.domain.model.dto.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;

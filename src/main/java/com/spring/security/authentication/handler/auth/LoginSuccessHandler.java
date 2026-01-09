@@ -45,12 +45,10 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
 
     @Override
     public void onAuthenticationSuccess(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserLoginInfo currentUser)) {
-            throw new BaseException(ResponseCodeConstants.TYPE_ERROR, "登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！", HttpStatus.BAD_REQUEST);
-        }
-
+                                        @NonNull Authentication authentication) throws IOException {
+        UserLoginInfo currentUser = Optional.of(authentication).map(Authentication::getPrincipal)
+                .filter(UserLoginInfo.class::isInstance).map(UserLoginInfo.class::cast)
+                .orElseThrow(() -> new BaseException(ResponseCodeConstants.TYPE_ERROR, "登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！", HttpStatus.BAD_REQUEST));
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = new JwtTokenUserLoginInfo(currentUser.getSessionId(), currentUser.getUsername());
         // 生成token和refreshToken
         String token = jwtService.generateTokenFromUsername(currentUser.getUsername(), jwtTokenUserLoginInfo, JWTConstants.TOKEN_EXPIRED_TIME);
