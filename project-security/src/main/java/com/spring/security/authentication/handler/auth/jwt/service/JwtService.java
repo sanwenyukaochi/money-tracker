@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -27,8 +27,6 @@ public class JwtService {
 
     @Value("${spring.app.jwtSecret}")
     private String jwtSecret;
-
-    private final ObjectMapper objectMapper;
 
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -46,7 +44,7 @@ public class JwtService {
     }
 
     public String generateTokenFromUsername(String username, JwtTokenUserLoginInfo jwtTokenUserLoginInfo, long expiredTime) {
-        String json = objectMapper.writeValueAsString(jwtTokenUserLoginInfo);
+        String json = JsonMapper.shared().writeValueAsString(jwtTokenUserLoginInfo);
         return Jwts.builder()
                 .subject(username)
                 .claim(JWTConstants.USER_INFO, json)
@@ -65,7 +63,7 @@ public class JwtService {
             Jws<Claims> claimsJws = Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
             Claims claims = claimsJws.getPayload();
             String json = claims.get(JWTConstants.USER_INFO, String.class);
-            return objectMapper.readValue(json, JwtTokenUserLoginInfo.class);
+            return JsonMapper.shared().readValue(json, JwtTokenUserLoginInfo.class);
         } catch (MalformedJwtException e) {
             log.error("JWT Token 无效: {}", e.getMessage());
             throw new BaseException(ResponseCodeConstants.TOKEN_MALFORMED, "JWT Token 无效", HttpStatus.UNAUTHORIZED);
