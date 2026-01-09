@@ -1,5 +1,7 @@
 package com.spring.security.authentication.config;
 
+import com.spring.security.authentication.handler.auth.def.DefaultApiAuthenticationFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +52,7 @@ public class CustomWebSecurityConfig {
     /**
      * 禁用不必要的默认filter，处理异常响应内容
      */
-    private void commonHttpSetting(HttpSecurity httpSecurity) throws Exception {
+    private void commonHttpSetting(HttpSecurity httpSecurity) {
         // 禁用SpringSecurity默认filter。这些filter都是非前后端分离项目的产物，用不上.
         // properties配置文件将日志设置DEBUG模式，就能看到加载了哪些filter
         // logging.level.org.springframework.security=DEBUG
@@ -98,7 +100,7 @@ public class CustomWebSecurityConfig {
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain loginFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain loginFilterChain(HttpSecurity httpSecurity) {
         commonHttpSetting(httpSecurity);
         // 使用securityMatcher限定当前配置作用的路径
         httpSecurity
@@ -132,7 +134,7 @@ public class CustomWebSecurityConfig {
      */
     @Bean
     @Order(2)
-    public SecurityFilterChain openApiFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain openApiFilterChain(HttpSecurity httpSecurity) {
         commonHttpSetting(httpSecurity);
         // 不使用securityMatcher限定当前配置作用的路径。所有没有匹配上指定SecurityFilterChain的请求，都走这里鉴权
         httpSecurity
@@ -150,7 +152,7 @@ public class CustomWebSecurityConfig {
      */
     @Bean
     @Order(3)
-    public SecurityFilterChain publicApiFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain publicApiFilterChain(HttpSecurity httpSecurity) {
         commonHttpSetting(httpSecurity);
         // 使用securityMatcher限定当前配置作用的路径
         httpSecurity
@@ -165,7 +167,7 @@ public class CustomWebSecurityConfig {
      */
     @Bean
     @Order(4)
-    public SecurityFilterChain JwtTokenApiFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain JwtTokenApiFilterChain(HttpSecurity http) {
         commonHttpSetting(http);
         // 使用securityMatcher限定当前配置作用的路径
         http.securityMatcher("/api/**")
@@ -181,16 +183,17 @@ public class CustomWebSecurityConfig {
     /**
      * 其余路径，走这个默认过滤链
      */
-    /*
+
     @Bean
     @Order(Integer.MAX_VALUE) // 这个过滤链最后加载
-    public SecurityFilterChain defaultApiFilterChain(HttpSecurity http) throws Exception {
+    @ConditionalOnProperty(name = "spring.security.default-api-filter-chain", havingValue = "true", matchIfMissing = false)
+    public SecurityFilterChain defaultApiFilterChain(HttpSecurity http) {
         commonHttpSetting(http);
         // 不用securityMatcher表示缺省值，匹配不上其他过滤链时，都走这个过滤链
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
         http.addFilterBefore(new DefaultApiAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-    */
+
 
 }
