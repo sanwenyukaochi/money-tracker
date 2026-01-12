@@ -3,13 +3,18 @@ package com.spring.security.authentication.handler.auth.jwt;
 import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.dto.JwtTokenUserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.service.JwtService;
-import com.spring.security.common.cache.UserCache;
+import com.spring.security.common.cache.constant.RedisCache;
+import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
+import org.redisson.api.RedissonClient;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -21,6 +26,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * JWT认证提供者
@@ -31,7 +37,7 @@ import java.util.Map;
 public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     private final JwtService jwtService;
-    private final UserCache userCache;
+    private final RedissonClient redissonClient;
 
     @Override
     @SneakyThrows
@@ -57,7 +63,9 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
 
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
-        UserLoginInfo userLoginInfo = userCache.getUserLoginInfo(user.getUsername());
+        UserLoginInfo userLoginInfo = (UserLoginInfo) redissonClient
+                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .get();
         // 认证通过，使用 Authenticated 为 true 的构造函数
         JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());
         // 必须转化成Map
@@ -77,10 +85,12 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
 
     protected void additionalAuthenticationChecks(User user, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         String presentedJwtToken = authentication.getJwtToken();
-        if (presentedJwtToken == null || user == null) {
-            log.debug("身份验证失败，因为身份与存储的值不匹配");
-            throw new BadCredentialsException(this.messages
-                    .getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证"));
-        }
+        UserLoginInfo userLoginInfo = (UserLoginInfo) redissonClient
+                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .get();
+        Optional.ofNullable(presentedJwtToken)
+                .orElseThrow(() -> new BadCredentialsException(this.messages.getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证")));
+        Optional.ofNullable(userLoginInfo)
+                .orElseThrow(() -> new BaseException(ResponseCodeConstants.TOKEN_EXPIRED, "JWT token was not found in Redis", HttpStatus.UNAUTHORIZED));
     }
 }

@@ -2,8 +2,10 @@ package com.spring.security.authentication.handler.auth;
 
 import com.spring.security.authentication.handler.auth.jwt.constant.JWTConstants;
 import com.spring.security.authentication.handler.auth.jwt.dto.JwtTokenUserLoginInfo;
+import com.spring.security.common.cache.constant.RedisCache;
+import org.redisson.api.RedissonClient;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.cache.UserCache;
 import com.spring.security.common.web.constant.ResponseCodeConstants;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +35,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
-    private final UserCache userCache;
+    private final RedissonClient redissonClient;
 
     @PostConstruct
     public void disableRedirectStrategy() {
@@ -62,7 +64,9 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
                 .orElse(Map.of());
 
         boolean hasAccount = authentication.getDetails() == null || Boolean.FALSE.equals(additionalInfo.get("isNewUser"));
-        if (hasAccount) userCache.putUserLoginInfo(jwtTokenUserLoginInfo.username(), currentUser);
+        if (hasAccount) redissonClient
+                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, jwtTokenUserLoginInfo.username()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .set(currentUser);
 
         LoginResponse loginResponse = new LoginResponse(token, refreshToken, additionalInfo);
         // UTF_8编码 APPLICATION_JSON_VALUE防止出现乱码

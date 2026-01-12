@@ -1,13 +1,11 @@
 package com.spring.security.common.cache.config;
 
-import com.spring.security.authentication.handler.auth.jwt.constant.JWTConstants;
 import com.spring.security.common.cache.constant.RedisCache;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.redisson.misc.RedisURI;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +21,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.time.Duration;
-import java.util.Collections;
 
 @Configuration
 @EnableCaching
@@ -58,8 +55,6 @@ public class RedisCacheConfig {
         return RedisCacheManager.builder(cacheWriter)
                 .cacheDefaults(defaultCacheConfiguration)
                 .transactionAware()
-                .withInitialCacheConfigurations(Collections.singletonMap(
-                        RedisCache.USER_INFO, defaultCacheConfiguration.entryTtl(Duration.ofMillis(JWTConstants.TOKEN_EXPIRED_TIME))))
                 .build();
     }
 

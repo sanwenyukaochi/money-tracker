@@ -78,7 +78,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
         if (!presentedSmsCode.equals("000000") || user == null) {
             log.debug("身份验证失败，因为验证码与存储的值不匹配");
             throw new BadCredentialsException(this.messages
-                    .getMessage("smsAuthenticationProvider.badCredentials", "错误的凭证"));
+                    .getMessage("smsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
     }
 }
