@@ -76,6 +76,9 @@ public class JwtService {
         } catch (IllegalArgumentException e) {
             log.error("JWT 内容为空: {}", e.getMessage());
             throw new BaseException(ResponseCodeConstants.TOKEN_EMPTY, "JWT 内容为空", HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            log.error("JWT 解析异常: {}", e.getMessage());
+            throw new BaseException(ResponseCodeConstants.TOKEN_PARSE_ERROR, "JWT 解析异常", HttpStatus.UNAUTHORIZED);
         }
     }
 }
