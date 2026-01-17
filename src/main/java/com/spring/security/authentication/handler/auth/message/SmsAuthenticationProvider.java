@@ -1,6 +1,6 @@
 package com.spring.security.authentication.handler.auth.message;
 
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
 import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -66,7 +65,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     }
 
     protected User retrieveUser(String phone, SmsAuthenticationToken authentication) throws AuthenticationException {
-        User loadedUser = userRepository.findByPhone(phone).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_PHONE_NOT_FOUND, "手机号不存在", HttpStatus.NOT_FOUND));
+        User loadedUser = userRepository.findByPhone(phone).orElseThrow(() -> new BaseException(BaseCode.USER_PHONE_NOT_FOUND));
         authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;

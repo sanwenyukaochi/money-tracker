@@ -1,6 +1,6 @@
 package com.spring.security.authentication.handler.auth.user;
 
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
 import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -68,7 +67,7 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
     }
 
     protected User retrieveUser(String username, UsernameAuthenticationToken authentication) throws AuthenticationException {
-        User loadedUser = userRepository.findByUsername(username).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
+        User loadedUser = userRepository.findByUsername(username).orElseThrow(() -> new BaseException(BaseCode.USER_NOT_FOUND));
         authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;

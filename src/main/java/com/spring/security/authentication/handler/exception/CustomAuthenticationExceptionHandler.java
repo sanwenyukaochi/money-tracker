@@ -1,7 +1,7 @@
 package com.spring.security.authentication.handler.exception;
 
+import com.spring.security.common.web.enums.BaseCode;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -33,6 +33,6 @@ public class CustomAuthenticationExceptionHandler implements AuthenticationEntry
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);
-        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_INVALID_CREDENTIALS, "认证失败", null));
+        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(BaseCode.AUTHENTICATION_ERROR, null));
     }
 }

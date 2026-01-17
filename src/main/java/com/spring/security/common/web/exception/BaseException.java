@@ -1,5 +1,7 @@
 package com.spring.security.common.web.exception;
 
+import com.spring.security.common.web.enums.BaseCode;
+import com.spring.security.domain.model.dto.Result;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -10,9 +12,7 @@ public class BaseException extends RuntimeException {
 
     private String code;
 
-    public BaseException() {
-        httpStatus = HttpStatus.BAD_REQUEST;
-    }
+    private String message;
 
     public BaseException(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
@@ -24,13 +24,23 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(String code, String message, HttpStatus httpStatus) {
-        this.code = code;
         super(message);
+        this.code = code;
+        this.message = message;
         this.httpStatus = httpStatus;
     }
 
-    public BaseException(String message, Throwable cause, HttpStatus httpStatus) {
-        super(message, cause);
+    public BaseException(BaseCode baseCode) {
+        super(baseCode.getMessage());
+        this.code = baseCode.getCode();
+        this.message = baseCode.getMessage();
+        this.httpStatus = baseCode.getHttpStatus();
+    }
+
+    public BaseException(Result result, HttpStatus httpStatus) {
+        super(result.message());
+        this.code = result.code();
+        this.message = result.message();
         this.httpStatus = httpStatus;
     }
 
@@ -39,9 +49,16 @@ public class BaseException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
-    public BaseException(String message, Throwable cause, boolean enableSuppression,
-                         boolean writableStackTrace, HttpStatus httpStatus) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public BaseException(String message, Throwable cause, HttpStatus httpStatus) {
+        super(message, cause);
+        this.message = message;
+        this.httpStatus = httpStatus;
+    }
+
+    public BaseException(String code, String message, Throwable cause, HttpStatus httpStatus) {
+        super(message, cause);
+        this.code = code;
+        this.message = message;
         this.httpStatus = httpStatus;
     }
 }

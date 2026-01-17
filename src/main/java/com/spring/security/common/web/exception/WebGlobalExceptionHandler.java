@@ -1,6 +1,7 @@
 package com.spring.security.common.web.exception;
 
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -18,31 +19,43 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class WebGlobalExceptionHandler {
 
     @ExceptionHandler(value = BaseException.class)
-    public Result<?> exceptionHandler(HttpServletResponse response, BaseException e) {
+    public Result<?> exceptionHandler(HttpServletRequest request, HttpServletResponse response, BaseException e) {
         response.setStatus(e.getHttpStatus().value());
-        log.warn("业务异常：code={}, msg={}", e.getCode(), e.getMessage(), e);
+        log.warn("业务异常 code={}, 错误信息={}, method={}, url={}, query={}", e.getCode(), e.getMessage(), getMethod(request), getRequestUrl(request), getRequestQuery(request), e);
         return Result.error(e.getCode(), e.getMessage(), null);
     }
 
     @ExceptionHandler(value = Exception.class)
-    public Result<?> exceptionHandler(HttpServletResponse response, Exception e) {
+    public Result<?> exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        log.warn("系统异常：code={}, msg={}", ResponseCodeConstants.SYSTEM_ERROR, e.getMessage(), e);
-        return Result.error(ResponseCodeConstants.SYSTEM_ERROR, "系统异常", null);
+        log.warn("系统异常 code={}, 错误信息={}, method={}, url={}, query={}", BaseCode.SYSTEM_ERROR.getCode(), e.getMessage(), getMethod(request), getRequestUrl(request), getRequestQuery(request), e);
+        return Result.error(BaseCode.SYSTEM_ERROR, null);
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public Result<?> exceptionHandler(HttpServletResponse response, HttpRequestMethodNotSupportedException e) {
+    public Result<?> exceptionHandler(HttpServletRequest request, HttpServletResponse response, HttpRequestMethodNotSupportedException e) {
         response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
-        log.warn("请求方法异常：code={}, msg={}", ResponseCodeConstants.HTTP_METHOD_NOT_ALLOWED, e.getMessage(), e);
-        return Result.error(ResponseCodeConstants.HTTP_METHOD_NOT_ALLOWED, "请求方法不支持" + e.getMethod(), null);
+        log.warn("请求方法异常 code={}, 错误信息={}, method={}, url={}, query={}", BaseCode.HTTP_METHOD_NOT_ALLOWED.getCode(), e.getMessage(), getMethod(request), getRequestUrl(request), getRequestQuery(request), e);
+        return Result.error(BaseCode.HTTP_METHOD_NOT_ALLOWED.getCode(), BaseCode.HTTP_METHOD_NOT_ALLOWED.getMessage() + e.getMethod(), null);
     }
 
     @ExceptionHandler(value = NoResourceFoundException.class)
-    public Result<?> exceptionHandler(HttpServletResponse response, NoResourceFoundException e) {
+    public Result<?> exceptionHandler(HttpServletRequest request, HttpServletResponse response, NoResourceFoundException e) {
         response.setStatus(HttpStatus.NOT_FOUND.value());
-        log.warn("资源找不到：code={}, msg={}", ResponseCodeConstants.RESOURCE_NOT_FOUND, e.getMessage(), e);
-        return Result.error(ResponseCodeConstants.RESOURCE_NOT_FOUND, e.getMessage(), null);
+        log.warn("资源找不到 code={}, 错误信息={}, method={}, url={}, query={}", BaseCode.RESOURCE_NOT_FOUND.getCode(), e.getMessage(), getMethod(request), getRequestUrl(request), getRequestQuery(request), e);
+        return Result.error(BaseCode.RESOURCE_NOT_FOUND.getCode(), e.getMessage(), null);
+    }
+
+    private String getMethod(HttpServletRequest request) {
+        return request.getMethod();
+    }
+
+    private String getRequestUrl(HttpServletRequest request) {
+        return request.getRequestURL().toString();
+    }
+
+    private String getRequestQuery(HttpServletRequest request){
+        return request.getQueryString();
     }
 
 }

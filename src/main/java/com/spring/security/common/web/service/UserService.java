@@ -1,11 +1,10 @@
 package com.spring.security.common.web.service;
 
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
 import com.spring.security.common.web.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import com.spring.security.domain.model.entity.User;
 import com.spring.security.domain.repository.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,18 +14,18 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
+        return userRepository.findByUsername(username).orElseThrow(() -> new BaseException(BaseCode.USER_NOT_FOUND));
     }
 
     public User getUserByPhone(String phone) {
-        return userRepository.findByPhone(phone).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_PHONE_NOT_FOUND, "手机号不存在", HttpStatus.NOT_FOUND));
+        return userRepository.findByPhone(phone).orElseThrow(() -> new BaseException(BaseCode.USER_PHONE_NOT_FOUND));
     }
 
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_EMAIL_NOT_FOUND, "邮箱不存在", HttpStatus.NOT_FOUND));
+        return userRepository.findByEmail(email).orElseThrow(() -> new BaseException(BaseCode.USER_EMAIL_NOT_FOUND));
     }
 
     public User findById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "用户不存在", HttpStatus.NOT_FOUND));
+        return userRepository.findById(userId).orElseThrow(() -> new BaseException(BaseCode.USER_NOT_FOUND));
     }
 }

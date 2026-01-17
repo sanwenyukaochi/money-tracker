@@ -1,7 +1,7 @@
 package com.spring.security.authentication.handler.auth;
 
+import com.spring.security.common.web.enums.BaseCode;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import com.spring.security.domain.model.dto.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +32,6 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         log.warn("登录异常：msg={}", authenticationException.getMessage(), authenticationException);
-        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_LOGIN_FAILED, authenticationException.getMessage(), null));
+        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(BaseCode.AUTH_LOGIN_FAILED.getCode(), authenticationException.getMessage(), null));
     }
 }

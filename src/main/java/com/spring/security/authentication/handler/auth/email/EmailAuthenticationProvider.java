@@ -1,6 +1,6 @@
 package com.spring.security.authentication.handler.auth.email;
 
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
 import com.spring.security.common.web.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import com.spring.security.authentication.handler.auth.UserLoginInfo;
@@ -9,7 +9,6 @@ import com.spring.security.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -68,7 +67,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
     }
 
     protected User retrieveUser(String email, EmailAuthenticationToken authentication) throws AuthenticationException {
-        User loadedUser = userRepository.findByEmail(email).orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_EMAIL_NOT_FOUND, "邮箱不存在", HttpStatus.NOT_FOUND));
+        User loadedUser = userRepository.findByEmail(email).orElseThrow(() -> new BaseException(BaseCode.USER_EMAIL_NOT_FOUND));
         authentication.setDetails(null);
         log.debug("用户信息查询成功，用户: {}", loadedUser.getUsername());
         return loadedUser;

@@ -4,7 +4,7 @@ import com.spring.security.authentication.handler.auth.UserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.dto.JwtTokenUserLoginInfo;
 import com.spring.security.authentication.handler.auth.jwt.service.JwtService;
 import com.spring.security.common.cache.constant.RedisCache;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
+import com.spring.security.common.web.enums.BaseCode;
 import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.model.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.jspecify.annotations.NonNull;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -91,6 +90,6 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
         Optional.ofNullable(presentedJwtToken)
                 .orElseThrow(() -> new BadCredentialsException(this.messages.getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证")));
         Optional.ofNullable(userLoginInfo)
-                .orElseThrow(() -> new BaseException(ResponseCodeConstants.TOKEN_EXPIRED, "JWT token was not found in Redis", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new BaseException(BaseCode.TOKEN_NOT_FIND_IN_REDIS));
     }
 }

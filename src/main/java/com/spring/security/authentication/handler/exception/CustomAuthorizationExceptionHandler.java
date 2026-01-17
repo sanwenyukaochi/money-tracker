@@ -1,7 +1,7 @@
 package com.spring.security.authentication.handler.exception;
 
+import com.spring.security.common.web.enums.BaseCode;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -34,6 +34,6 @@ public class CustomAuthorizationExceptionHandler implements AccessDeniedHandler 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
         log.warn("访问异常：msg={}", accessDeniedException.getMessage(), accessDeniedException);
-        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.AUTH_ACCESS_DENIED, "授权失败", null));
+        JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(BaseCode.AUTH_ACCESS_DENIED, null));
     }
 }

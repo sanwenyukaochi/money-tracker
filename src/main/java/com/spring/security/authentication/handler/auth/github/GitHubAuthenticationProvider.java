@@ -1,14 +1,14 @@
 package com.spring.security.authentication.handler.auth.github;
 
 import com.spring.security.authentication.handler.auth.github.dto.GitHubOAuthMeta;
+import com.spring.security.common.web.enums.BaseCode;
+import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.model.entity.User;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
-import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.repository.UserIdentityRepository;
 import com.spring.security.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ import com.spring.security.authentication.handler.auth.github.service.GitHubOAut
 import com.spring.security.domain.model.entity.UserIdentity;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -76,7 +75,7 @@ public class GitHubAuthenticationProvider implements AuthenticationProvider {
                 .filter(Number.class::isInstance)
                 .map(Number.class::cast)
                 .map(Number::longValue)
-                .orElseThrow(() -> new BaseException(ResponseCodeConstants.USER_NOT_FOUND, "GitHub 用户 ID 无效或为空", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new BaseException(BaseCode.USER_NOT_FOUND));
         User loadedUser = userIdentityRepository
                 .findByProviderUserIdAndProvider(providerUserId, UserIdentity.AuthProvider.GITHUB)
                 .flatMap(identity -> userRepository.findById(identity.getUser().getId()))

@@ -3,10 +3,11 @@ package com.spring.security.authentication.handler.auth;
 import com.spring.security.authentication.handler.auth.jwt.constant.JWTConstants;
 import com.spring.security.authentication.handler.auth.jwt.dto.JwtTokenUserLoginInfo;
 import com.spring.security.common.cache.constant.RedisCache;
+import com.spring.security.common.web.enums.BaseCode;
+import com.spring.security.common.web.exception.BaseException;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,6 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import com.spring.security.authentication.handler.auth.jwt.service.JwtService;
-import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.model.dto.Result;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
                                         @NonNull Authentication authentication) throws IOException {
         UserLoginInfo currentUser = Optional.of(authentication).map(Authentication::getPrincipal)
                 .filter(UserLoginInfo.class::isInstance).map(UserLoginInfo.class::cast)
-                .orElseThrow(() -> new BaseException(ResponseCodeConstants.TYPE_ERROR, "登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new BaseException(BaseCode.AUTHENTICATION_TYPE_ERROR));
         JwtTokenUserLoginInfo jwtTokenUserLoginInfo = new JwtTokenUserLoginInfo(currentUser.getSessionId(), currentUser.getUsername());
         // 生成token和refreshToken
         String token = jwtService.generateTokenFromUsername(currentUser.getUsername(), jwtTokenUserLoginInfo, JWTConstants.TOKEN_EXPIRED_TIME);

@@ -1,7 +1,8 @@
 package com.spring.security.authentication.handler.exception;
 
+import com.spring.security.common.web.enums.BaseCode;
+import com.spring.security.common.web.exception.BaseException;
 import tools.jackson.databind.json.JsonMapper;
-import com.spring.security.common.web.constant.ResponseCodeConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.spring.security.common.web.exception.BaseException;
 import com.spring.security.domain.model.dto.Result;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
@@ -45,13 +45,13 @@ public class CustomSecurityExceptionHandler extends OncePerRequestFilter {
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, e.getMessage(), null));
+            JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(BaseCode.SYSTEM_ERROR.getCode(), e.getMessage(), null));
         } catch (Exception e) {
             log.warn("未知异常：msg={}",e.getMessage(), e);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(ResponseCodeConstants.SYSTEM_ERROR, "未知异常", null));
+            JsonMapper.shared().writeValue(response.getOutputStream(), Result.error(BaseCode.SYSTEM_ERROR, null));
         }
     }
 }
