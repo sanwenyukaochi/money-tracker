@@ -63,7 +63,7 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     protected Authentication createSuccessAuthentication(Authentication authentication,
                                                          User user) {
         UserLoginInfo userLoginInfo = (UserLoginInfo) redissonClient
-                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .getBucket(RedisCache.USER_INFO.formatted(user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
                 .get();
         // 认证通过，使用 Authenticated 为 true 的构造函数
         JwtTokenAuthenticationToken result = new JwtTokenAuthenticationToken(userLoginInfo, List.of());
@@ -85,7 +85,7 @@ public class JwtTokenAuthenticationProvider implements AuthenticationProvider {
     protected void additionalAuthenticationChecks(User user, JwtTokenAuthenticationToken authentication) throws AuthenticationException {
         String presentedJwtToken = authentication.getJwtToken();
         UserLoginInfo userLoginInfo = (UserLoginInfo) redissonClient
-                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .getBucket(RedisCache.USER_INFO.formatted(user.getUsername()), new TypedJsonJacksonCodec(UserLoginInfo.class))
                 .get();
         Optional.ofNullable(presentedJwtToken)
                 .orElseThrow(() -> new BadCredentialsException(this.messages.getMessage("jwtTokenAuthenticationProvider.sessionExpired", "错误的凭证")));

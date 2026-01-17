@@ -65,7 +65,7 @@ public class LoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestH
 
         boolean hasAccount = authentication.getDetails() == null || Boolean.FALSE.equals(additionalInfo.get("isNewUser"));
         if (hasAccount) redissonClient
-                .getBucket("%s:%s".formatted(RedisCache.USER_INFO, jwtTokenUserLoginInfo.username()), new TypedJsonJacksonCodec(UserLoginInfo.class))
+                .getBucket(RedisCache.USER_INFO.formatted(jwtTokenUserLoginInfo.username()), new TypedJsonJacksonCodec(UserLoginInfo.class))
                 .set(currentUser);
 
         LoginResponse loginResponse = new LoginResponse(token, refreshToken, additionalInfo);
