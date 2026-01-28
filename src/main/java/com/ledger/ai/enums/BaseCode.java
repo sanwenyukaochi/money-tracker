@@ -42,7 +42,7 @@ public enum BaseCode {
                 .orElseThrow(() -> new BaseException(BaseCode.TYPE_ERROR));
     }
 
-    public static String getByMessage(String code) {
+    public static String getMessageByCode(String code) {
         return getByCode(code).getMessage();
     }
 }
