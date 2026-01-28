@@ -1,6 +1,5 @@
 package com.ledger.ai.authentication.config;
 
-import com.ledger.ai.authentication.handler.auth.def.DefaultApiAuthenticationFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,6 @@ import com.ledger.ai.authentication.handler.auth.email.EmailAuthenticationProvid
 import com.ledger.ai.authentication.handler.exception.CustomAuthenticationExceptionHandler;
 import com.ledger.ai.authentication.handler.exception.CustomAuthorizationExceptionHandler;
 import com.ledger.ai.authentication.handler.exception.CustomSecurityExceptionHandler;
-import com.ledger.ai.authentication.handler.auth.openApi.OpenApiAuthenticationFilter;
 import com.ledger.ai.authentication.handler.auth.jwt.JwtTokenAuthenticationFilter;
 import com.ledger.ai.authentication.handler.auth.jwt.JwtTokenAuthenticationProvider;
 import com.ledger.ai.authentication.handler.auth.jwt.service.JwtService;
@@ -130,9 +128,6 @@ public class CustomWebSecurityConfig {
                 .securityMatcher("/api/open-api/**")
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 
-        OpenApiAuthenticationFilter openApiFilter = new OpenApiAuthenticationFilter();
-        // 加一个登录方式。用户名、密码登录
-        httpSecurity.addFilterBefore(openApiFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
@@ -172,7 +167,6 @@ public class CustomWebSecurityConfig {
     /**
      * 其余路径，走这个默认过滤链
      */
-
     @Bean
     @Order(Integer.MAX_VALUE) // 这个过滤链最后加载
     @ConditionalOnProperty(name = "spring.security.default-api-filter-chain", havingValue = "true", matchIfMissing = false)
@@ -180,9 +174,7 @@ public class CustomWebSecurityConfig {
         commonHttpSetting(http);
         // 不用securityMatcher表示缺省值，匹配不上其他过滤链时，都走这个过滤链
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
-        http.addFilterBefore(new DefaultApiAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
 }
