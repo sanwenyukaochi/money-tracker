@@ -27,9 +27,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Spring Security API")
+                        .title("Money Tracker API")
                         .version("1.0.0")
-                        .description("Spring Security API Document")
+                        .description("Money Tracker API Document")
                         .license(new License()
                                 .name("License")
                                 .url("https://www.sanwenyukaochi.license.com"))
