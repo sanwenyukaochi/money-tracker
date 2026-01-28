@@ -19,22 +19,22 @@ import com.ledger.ai.model.entity.base.BaseEntity;
         },
         comment = "用户表"
 )
-@Schema(name = "User", title = "用户对象", description = "系统用户实体，包含认证和状态信息")
+@Schema(name = "User", title = "用户对象")
 public class User extends BaseEntity {
 
-    @Schema(title = "用户名", example = "alice", description = "系统登录名，唯一标识用户")
+    @Schema(title = "用户名")
     @Column(comment = "用户名", name = "username", nullable = false, length = 20)
     private String username;
 
-    @Schema(title = "密码", description = "加密后的密码，不会在接口返回中显示", accessMode = Schema.AccessMode.WRITE_ONLY)
+    @Schema(title = "密码", accessMode = Schema.AccessMode.WRITE_ONLY)
     @Column(comment = "用户密码", name = "password", nullable = false, length = 120)
     private String password;
 
-    @Schema(title = "邮箱", example = "alice@example.com", description = "用户绑定邮箱，用于找回密码或登录")
+    @Schema(title = "邮箱")
     @Column(comment = "邮箱", name = "email", nullable = false, length = 50)
     private String email;
 
-    @Schema(title = "手机号", example = "12345678910", description = "用户绑定手机号，用于找回密码或登录")
+    @Schema(title = "手机号")
     @Column(comment = "手机号", name = "phone", nullable = false, length = 50)
     private String phone;
 
@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     @Column(comment = "状态（true=启用，false=禁用）", name = "enabled", nullable = false)
     private Boolean enabled = true;
 
-    @Schema(title = "双因素认证密钥", example = "JBOSSWS3DPKG3PXP", description = "TOTP Secret，用于 Google Authenticator 等")
+    @Schema(title = "双因素认证密钥", description = "TOTP Secret，用于 Google Authenticator 等")
     @Column(comment = "双因素认证密钥（TOTP Secret，用于 Google Authenticator 等）", name = "two_factor_secret", length = 64)
     private String twoFactorSecret;
 
