@@ -48,6 +48,7 @@ dependencies {
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "org.jspecify:jspecify:${jspecifyVersion}"
+    implementation "cn.hutool:hutool-core:${hutoolVersion}"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
