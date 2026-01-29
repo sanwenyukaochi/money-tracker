@@ -54,8 +54,8 @@ dependencies {
 
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
     implementation 'org.springframework.ai:spring-ai-starter-model-deepseek'
-    implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
-    implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
+    //implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
+    //implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
